@@ -37,25 +37,40 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
     openQuickView(fragrance);
   };
 
+  const getPricePerMl = (p: DecantPrice) => {
+    if (p.size === '5ml') return `$${Math.round(p.price / 5).toLocaleString('es-AR')}/ml`;
+    if (p.size === '10ml') return `$${Math.round(p.price / 10).toLocaleString('es-AR')}/ml`;
+    if (p.size === '100ml') return `$${Math.round(p.price / 100).toLocaleString('es-AR')}/ml`;
+    return null;
+  };
+
   return (
     <article
       onClick={() => openQuickView(fragrance)}
       className="group relative rounded-2xl bg-brand-surface/70 border border-white/10 hover:border-brand-gold/40 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-luxury hover:shadow-glow cursor-pointer"
     >
-      {/* Top Image Container */}
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-zinc-950">
+      {/* Top Image Container with Studio Lighting Backdrop */}
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-b from-zinc-800/90 via-zinc-900 to-zinc-950">
         <img
           src={fragrance.image}
           alt={fragrance.name}
-          className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+          className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out relative z-0"
           loading="lazy"
         />
 
-        {/* Ambient Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-surface via-transparent to-black/30 pointer-events-none" />
+        {/* Studio Spotlight & Radial Lighting Gradient */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,_rgba(255,255,255,0.08)_0%,_rgba(35,35,42,0.25)_45%,_rgba(15,15,18,0.8)_100%)] pointer-events-none z-[1]" />
+
+        {/* Ambient Gradient Overlay blending into card */}
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-surface via-transparent to-black/30 pointer-events-none z-[2]" />
 
         {/* Top Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+          {fragrance.stock > 0 && fragrance.stock <= 5 && (
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/30 text-rose-200 border border-rose-500/40 backdrop-blur-md shadow-lg animate-pulse">
+              ⚡ ¡Últimas {fragrance.stock} unid!
+            </span>
+          )}
           {fragrance.isBestSeller && (
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30 backdrop-blur-md">
               <Flame className="w-3 h-3 text-amber-400" />
@@ -76,7 +91,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
         </div>
 
         {/* Quick View Button on Hover */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-[2px]">
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-[2px] z-10">
           <button
             onClick={handleQuickView}
             className="px-4 py-2 rounded-xl bg-zinc-900/90 text-white text-xs font-medium border border-white/20 hover:border-brand-gold hover:text-brand-gold transition-all flex items-center gap-2 shadow-xl transform translate-y-2 group-hover:translate-y-0 duration-300"
@@ -86,10 +101,32 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
           </button>
         </div>
 
-        {/* Perfume Category indicator */}
-        <div className="absolute bottom-3 left-3 z-10">
-          <span className="text-[10px] font-semibold tracking-wider uppercase text-zinc-400 font-sans px-2 py-0.5 rounded bg-black/40 backdrop-blur-md border border-white/5">
-            {fragrance.category === 'arabe' ? 'Colección Árabe' : fragrance.category === 'disenador' ? 'Diseñador' : 'Edición Especial'}
+        {/* Perfume Category & Gender indicator (Bottom Left) */}
+        <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1.5">
+          <span className="text-[10px] font-semibold tracking-wider uppercase text-zinc-300 font-sans px-2 py-0.5 rounded bg-black/50 backdrop-blur-md border border-white/10">
+            {fragrance.category === 'arabe' ? 'Árabe' : fragrance.category === 'disenador' ? 'Diseñador' : 'Edición Especial'}
+          </span>
+          <span className="text-[10px] font-semibold tracking-wider text-brand-gold-light font-sans px-2 py-0.5 rounded bg-black/50 backdrop-blur-md border border-white/10">
+            {fragrance.gender}
+          </span>
+        </div>
+
+        {/* Official Le Désir Luxury Watermark Stamp (Bottom Right) */}
+        <div className="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 text-white shadow-lg pointer-events-none select-none group-hover:border-brand-gold/40 group-hover:bg-black/75 transition-all duration-300">
+          <svg
+            className="w-3 h-3 text-brand-gold flex-shrink-0"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+          >
+            <rect x="9" y="2" width="6" height="4" rx="1" fill="currentColor" fillOpacity="0.25" />
+            <path d="M10 6h4v2h-4z" fill="currentColor" fillOpacity="0.5" />
+            <path d="M6 9h12l-1.5 12h-9L6 9z" stroke="currentColor" />
+            <line x1="8" y1="15" x2="16" y2="15" stroke="currentColor" strokeWidth="1" strokeOpacity="0.6" />
+          </svg>
+          <span className="text-[9px] font-editorial uppercase tracking-[0.2em] text-zinc-200 font-semibold leading-none">
+            Le Désir
           </span>
         </div>
       </div>
@@ -170,6 +207,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
             </div>
             <span className="text-[10px] text-zinc-400 block">
               {selectedPrice.size === '100ml' ? 'Frasco Sellado' : selectedPrice.size === 'unidad' ? 'Pack Completo' : 'Atomizador Decant'}
+              {getPricePerMl(selectedPrice) && (
+                <span className="text-amber-300/90 ml-1 font-semibold">
+                  • {getPricePerMl(selectedPrice)}
+                </span>
+              )}
             </span>
           </div>
 

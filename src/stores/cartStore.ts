@@ -30,6 +30,11 @@ export const $cartItems = atom<CartItem[]>(getInitialItems());
 export const $isCartOpen = atom<boolean>(false);
 export const $appliedCoupon = atom<Coupon | null>(null);
 export const $paymentMethod = atom<'transfer' | 'card'>('transfer');
+export const $isGift = atom<boolean>(false);
+export const $giftMessage = atom<string>('');
+
+export const setIsGift = (val: boolean) => $isGift.set(val);
+export const setGiftMessage = (msg: string) => $giftMessage.set(msg);
 
 // Persist cart to localStorage on changes
 if (typeof window !== 'undefined') {
@@ -204,6 +209,13 @@ export const generateWhatsAppLink = (customerName = '', customerCity = ''): stri
   }
   if (customerCity.trim()) {
     text += `📍 *Ciudad / Localidad:* ${customerCity.trim()}\n`;
+  }
+
+  if ($isGift.get()) {
+    text += `🎁 *¿Es para regalo?:* ¡Sí, empaquetar para obsequio!\n`;
+    if ($giftMessage.get().trim()) {
+      text += `💌 *Dedicatoria:* "${$giftMessage.get().trim()}"\n`;
+    }
   }
 
   text += `\n¿Tienen stock disponible para despachar? ¡Muchas gracias!`;

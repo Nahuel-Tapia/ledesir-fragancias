@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 import { $cartCount, openCart } from '../../stores/cartStore';
-import { $catalog, openQuickView } from '../../stores/catalogStore';
+import { $catalog, openQuickView, $isQuizOpen, openQuiz, closeQuiz } from '../../stores/catalogStore';
 import { Logo } from './Logo';
 import { FragranceQuizModal } from '../home/FragranceQuizModal';
 import { ShoppingBag, Search, Menu, X, ShieldCheck, Sparkles, CheckCircle2 } from 'lucide-react';
@@ -9,11 +9,11 @@ import { ShoppingBag, Search, Menu, X, ShieldCheck, Sparkles, CheckCircle2 } fro
 export const Navbar: React.FC = () => {
   const cartCount = useStore($cartCount);
   const catalog = useStore($catalog);
+  const isQuizOpen = useStore($isQuizOpen);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [quizOpen, setQuizOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -92,7 +92,7 @@ export const Navbar: React.FC = () => {
 
             {/* Quiz Trigger button in Navbar */}
             <button
-              onClick={() => setQuizOpen(true)}
+              onClick={() => openQuiz()}
               className="px-3 py-1 rounded-full bg-brand-gold/15 text-brand-gold border border-brand-gold/30 hover:bg-brand-gold hover:text-brand-dark transition-all flex items-center gap-1 text-[11px] font-semibold"
             >
               <Sparkles className="w-3 h-3" />
@@ -324,7 +324,7 @@ export const Navbar: React.FC = () => {
       )}
 
       {/* Fragrance Quiz Modal */}
-      <FragranceQuizModal isOpen={quizOpen} onClose={() => setQuizOpen(false)} />
+      <FragranceQuizModal isOpen={isQuizOpen} onClose={() => closeQuiz()} />
     </>
   );
 };

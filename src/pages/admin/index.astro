@@ -1,6 +1,14 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { AdminDashboard } from '../../components/admin/AdminDashboard';
+import { AdminLoginForm } from '../../components/admin/AdminLoginForm';
+import { AuthService } from '../../core/application/services/AuthService';
+
+export const prerender = false;
+
+// Verificación de autorización en el servidor (SSR)
+const adminUser = await AuthService.isRequestAuthorized(Astro.request, Astro.cookies);
+const isAuthenticated = Boolean(adminUser);
 ---
 
 <BaseLayout
@@ -8,6 +16,10 @@ import { AdminDashboard } from '../../components/admin/AdminDashboard';
   description="Gestor de catálogo, banners de inicio y cupones de Le Désir Fragancias."
 >
   <div class="min-h-screen bg-brand-dark/50 py-6">
-    <AdminDashboard client:only="react" />
+    {isAuthenticated ? (
+      <AdminDashboard client:only="react" userEmail={adminUser?.email} />
+    ) : (
+      <AdminLoginForm client:load />
+    )}
   </div>
 </BaseLayout>

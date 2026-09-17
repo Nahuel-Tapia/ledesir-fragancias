@@ -30,6 +30,7 @@ import {
   CheckCircle2,
   Clock,
   ExternalLink,
+  LogOut,
 } from 'lucide-react';
 
 interface BackendInfo {
@@ -39,7 +40,11 @@ interface BackendInfo {
   adapter: string;
 }
 
-export const AdminDashboard: React.FC = () => {
+interface AdminDashboardProps {
+  userEmail?: string;
+}
+
+export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => {
   const catalog = useStore($catalog);
   const banners = useStore($banners);
   const isSyncing = useStore($isSyncing);
@@ -128,6 +133,18 @@ export const AdminDashboard: React.FC = () => {
       console.warn('Orders offline/mock', e);
     } finally {
       setIsLoadingOrders(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (e) {
+      console.warn('Error during logout', e);
+    }
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('ledesir_admin_logged');
+      window.location.reload();
     }
   };
 
@@ -279,6 +296,15 @@ export const AdminDashboard: React.FC = () => {
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Restablecer Demo
+          </button>
+
+          <button
+            onClick={handleLogout}
+            className="px-3.5 py-1.5 rounded-xl bg-zinc-800/90 hover:bg-zinc-700 text-zinc-200 border border-white/10 text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"
+            title="Cerrar sesión de administrador"
+          >
+            <LogOut className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Cerrar Sesión</span>
           </button>
         </div>
       </div>

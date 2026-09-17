@@ -40,6 +40,7 @@ export const $catalog = atom<Fragrance[]>(getInitialFragrances());
 export const $banners = atom<BannerSlide[]>(getInitialBanners());
 export const $quickViewFragrance = atom<Fragrance | null>(null);
 export const $isSyncing = atom<boolean>(false);
+export const $isQuizOpen = atom<boolean>(false);
 
 // LocalStorage Persistence
 if (typeof window !== 'undefined') {
@@ -157,4 +158,13 @@ export const openQuickView = (fragrance: Fragrance) => {
 
 export const closeQuickView = () => {
   $quickViewFragrance.set(null);
+};
+
+// Quiz Modal Actions
+export const openQuiz = () => {
+  $isQuizOpen.set(true);
+};
+
+export const closeQuiz = () => {
+  $isQuizOpen.set(false);
 };

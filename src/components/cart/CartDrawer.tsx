@@ -22,6 +22,11 @@ import {
   BANK_ALIAS,
   BANK_HOLDER,
   submitOrderToBackend,
+  $isGift,
+  setIsGift,
+  $giftMessage,
+  setGiftMessage,
+  addToCart,
 } from '../../stores/cartStore';
 import confetti from 'canvas-confetti';
 import {
@@ -55,6 +60,24 @@ export const CartDrawer: React.FC = () => {
   const [customerName, setCustomerName] = useState('');
   const [customerCity, setCustomerCity] = useState('');
   const [aliasCopied, setAliasCopied] = useState(false);
+  const isGift = useStore($isGift);
+  const giftMessage = useStore($giftMessage);
+
+  const hasAtomizerInCart = items.some((it) => it.fragranceId === 'atomizador-cuero-noir');
+
+  const handleAddAtomizerUpsell = () => {
+    addToCart(
+      {
+        id: 'atomizador-cuero-noir',
+        name: 'Atomizador Portátil Recargable Noir & Gold',
+        brand: 'Le Désir Privée',
+        image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80',
+      },
+      'unidad',
+      9500,
+      1
+    );
+  };
 
   if (!isOpen) return null;
 
@@ -222,6 +245,46 @@ export const CartDrawer: React.FC = () => {
           {/* Footer & Checkout Area */}
           {items.length > 0 && (
             <div className="p-5 sm:p-6 bg-zinc-950/90 border-t border-white/10 space-y-3.5 max-h-[58vh] overflow-y-auto">
+              {/* Total Savings Banner if any discount applied */}
+              {discount > 0 && (
+                <div className="p-2.5 rounded-xl bg-gradient-to-r from-emerald-950/60 via-brand-surface to-emerald-950/60 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between shadow-sm">
+                  <span className="flex items-center gap-1.5 font-semibold">
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                    ¡Ahorro total en este pedido!
+                  </span>
+                  <span className="font-bold text-white text-xs">-{formatCurrency(discount)}</span>
+                </div>
+              )}
+
+              {/* 1-Click Luxury Upsell: Portable Leather Atomizer */}
+              {!hasAtomizerInCart && (
+                <div className="p-2.5 rounded-xl bg-brand-gold/10 border border-brand-gold/20 flex items-center justify-between gap-2.5">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <img
+                      src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=150&q=80"
+                      alt="Atomizador Noir"
+                      className="w-9 h-9 rounded-lg object-cover border border-white/10 flex-shrink-0"
+                    />
+                    <div className="min-w-0">
+                      <p className="text-[11px] font-bold text-white leading-tight truncate">
+                        Atomizador Portátil Noir 5ml
+                      </p>
+                      <p className="text-[10px] text-brand-gold-light truncate">
+                        $9.500 • Ideal para llevar en el bolsillo
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleAddAtomizerUpsell}
+                    className="px-2.5 py-1 rounded-lg bg-brand-gold hover:bg-brand-gold-light text-brand-dark text-[11px] font-bold transition flex items-center gap-1 shadow flex-shrink-0 active:scale-95"
+                  >
+                    <Plus className="w-3 h-3" />
+                    Sumar
+                  </button>
+                </div>
+              )}
+
               {/* Payment Method Selector (10% OFF Transferencia) */}
               <div className="p-3 rounded-2xl bg-zinc-900/80 border border-white/10 space-y-2">
                 <span className="text-[11px] text-zinc-400 font-semibold block">
@@ -350,6 +413,31 @@ export const CartDrawer: React.FC = () => {
                   placeholder="Ciudad / Provincia"
                   className="px-3 py-1.5 rounded-xl bg-zinc-900 border border-white/5 text-white placeholder:text-zinc-500 text-xs focus:outline-none focus:border-white/20"
                 />
+              </div>
+
+              {/* Gift Option with Dedication Note */}
+              <div className="p-2.5 rounded-xl bg-zinc-900/70 border border-white/5 space-y-2">
+                <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-zinc-300 hover:text-white">
+                  <input
+                    type="checkbox"
+                    checked={isGift}
+                    onChange={(e) => setIsGift(e.target.checked)}
+                    className="w-4 h-4 rounded border-white/20 bg-zinc-800 text-brand-gold focus:ring-brand-gold accent-brand-gold cursor-pointer"
+                  />
+                  <span className="flex items-center gap-1.5 font-medium">
+                    <span>🎁</span>
+                    <span>¿Es para regalo? (Packaging especial)</span>
+                  </span>
+                </label>
+                {isGift && (
+                  <textarea
+                    rows={2}
+                    value={giftMessage}
+                    onChange={(e) => setGiftMessage(e.target.value)}
+                    placeholder="Escribe aquí una dedicatoria o mensaje especial para incluir..."
+                    className="w-full p-2.5 rounded-xl bg-zinc-950 border border-brand-gold/30 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-brand-gold transition"
+                  />
+                )}
               </div>
 
               {/* Price Breakdown */}

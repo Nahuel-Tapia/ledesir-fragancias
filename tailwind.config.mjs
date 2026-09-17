@@ -21,7 +21,7 @@ export default {
       fontFamily: {
         serif: ['"Cormorant Garamond"', '"Playfair Display"', 'Georgia', 'serif'],
         sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
-        script: ['"Playwrite IT Moderna"', 'cursive', 'Georgia'],
+        script: ['"Pinyon Script"', 'cursive', 'Georgia'],
       },
       boxShadow: {
         luxury: '0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08)',

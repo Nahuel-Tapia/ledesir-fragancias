@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getFragranceByIdUseCase, updateFragranceUseCase, deleteFragranceUseCase } from '../../../core/infrastructure/container';
+import { AuthService } from '../../../core/application/services/AuthService';
 
 export const prerender = false;
 
@@ -33,7 +34,18 @@ export const GET: APIRoute = async ({ params }) => {
   }
 };
 
-export const PUT: APIRoute = async ({ params, request }) => {
+export const PUT: APIRoute = async ({ params, request, cookies }) => {
+  const isAuth = await AuthService.isRequestAuthorized(request, cookies);
+  if (!isAuth) {
+    return new Response(JSON.stringify({
+      success: false,
+      error: 'No autorizado. Se requieren credenciales de administrador para modificar fragancias.',
+    }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   const { id } = params;
   if (!id) {
     return new Response(JSON.stringify({ success: false, error: 'ID no provisto' }), {
@@ -66,7 +78,18 @@ export const PUT: APIRoute = async ({ params, request }) => {
   }
 };
 
-export const DELETE: APIRoute = async ({ params }) => {
+export const DELETE: APIRoute = async ({ params, request, cookies }) => {
+  const isAuth = await AuthService.isRequestAuthorized(request, cookies);
+  if (!isAuth) {
+    return new Response(JSON.stringify({
+      success: false,
+      error: 'No autorizado. Se requieren credenciales de administrador para eliminar fragancias.',
+    }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   const { id } = params;
   if (!id) {
     return new Response(JSON.stringify({ success: false, error: 'ID no provisto' }), {

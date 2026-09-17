@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 
 interface LogoProps {
   className?: string;
@@ -7,15 +7,15 @@ interface LogoProps {
 
 export const Logo: React.FC<LogoProps> = ({ className = 'h-10', showTagline = true }) => {
   return (
-    <div className={`inline-flex flex-col items-center select-none group cursor-pointer ${className}`}>
-      <div className="flex items-center gap-3">
+    <div className={`inline-flex items-center select-none group cursor-pointer ${className}`}>
+      <div className="flex items-center gap-2.5 sm:gap-3.5">
         {/* Monogram LD with stylized Crystal Perfume Bottle */}
-        <div className="relative flex items-center justify-center">
+        <div className="relative flex-shrink-0 flex items-center justify-center">
           <svg
             viewBox="0 0 160 110"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="h-10 sm:h-12 w-auto transition-transform duration-300 group-hover:scale-105"
+            className="h-9 sm:h-12 w-auto transition-transform duration-300 group-hover:scale-105"
           >
             {/* The 'L' block with triangle cut */}
             <path
@@ -81,22 +81,21 @@ export const Logo: React.FC<LogoProps> = ({ className = 'h-10', showTagline = tr
           </svg>
         </div>
 
-        {/* Text Wordmark */}
-        <div className="flex flex-col">
-          <span className="font-editorial text-xl sm:text-2xl font-bold tracking-[0.2em] uppercase text-white leading-none">
+        {/* Text Wordmark - Left aligned with zero overflow */}
+        <div className="flex flex-col justify-center text-left">
+          <span className="font-editorial text-lg sm:text-2xl font-bold tracking-[0.16em] sm:tracking-[0.2em] uppercase text-white leading-none">
             Le Désir
           </span>
-          <span className="text-[10px] sm:text-[11px] tracking-[0.35em] uppercase text-zinc-400 font-sans font-medium mt-1">
+          <span className="text-[8.5px] sm:text-[10.5px] tracking-[0.28em] sm:tracking-[0.35em] uppercase text-zinc-400 font-sans font-medium mt-1 leading-none">
             Parfumerie Privée
           </span>
+          {showTagline && (
+            <span className="font-editorial italic text-[10px] sm:text-xs text-brand-gold tracking-wide mt-1 leading-none opacity-95 whitespace-nowrap">
+              Fragancias Árabes & Diseñador
+            </span>
+          )}
         </div>
       </div>
-
-      {showTagline && (
-        <span className="font-script text-xs sm:text-sm text-brand-gold -mt-1 tracking-wider text-center opacity-90">
-          fragancias árabes & diseñador
-        </span>
-      )}
     </div>
   );
 };

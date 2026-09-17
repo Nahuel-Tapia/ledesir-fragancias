@@ -1,9 +1,21 @@
 import type { APIRoute } from 'astro';
 import { createOrderUseCase, getOrdersUseCase } from '../../../core/infrastructure/container';
+import { AuthService } from '../../../core/application/services/AuthService';
 
 export const prerender = false;
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ request, cookies }) => {
+  const isAuth = await AuthService.isRequestAuthorized(request, cookies);
+  if (!isAuth) {
+    return new Response(JSON.stringify({
+      success: false,
+      error: 'No autorizado. Se requieren credenciales de administrador.',
+    }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   try {
     const orders = await getOrdersUseCase.execute();
     return new Response(JSON.stringify({

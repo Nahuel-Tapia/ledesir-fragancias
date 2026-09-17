@@ -42,6 +42,13 @@ export const QuickViewModal: React.FC = () => {
     setTimeout(() => setIsAdded(false), 1500);
   };
 
+  const getPricePerMl = (p: DecantPrice) => {
+    if (p.size === '5ml') return `$${Math.round(p.price / 5).toLocaleString('es-AR')}/ml`;
+    if (p.size === '10ml') return `$${Math.round(p.price / 10).toLocaleString('es-AR')}/ml`;
+    if (p.size === '100ml') return `$${Math.round(p.price / 100).toLocaleString('es-AR')}/ml`;
+    return null;
+  };
+
   const whatsappDirectMsg = encodeURIComponent(
     `✨ *¡Hola Le Désir Fragancias!* Me interesa comprar:\n• *${fragrance.name}* (${fragrance.brand})\n• Medida: ${selectedPrice.size} ($${selectedPrice.price.toLocaleString('es-AR')})\n¿Tienen disponibilidad para coordinar el envío?`
   );
@@ -66,32 +73,96 @@ export const QuickViewModal: React.FC = () => {
 
         {/* Left Column: Image */}
         <div className="w-full md:w-1/2 flex flex-col items-center">
-          <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-950 border border-white/10">
+          <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-gradient-to-b from-zinc-800/90 via-zinc-900 to-zinc-950 border border-white/10 shadow-luxury">
             <img
               src={fragrance.image}
               alt={fragrance.name}
-              className="w-full h-full object-cover object-center"
+              className="w-full h-full object-cover object-center relative z-0"
             />
-            <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-[10px] font-semibold text-brand-gold border border-brand-gold/30">
-              {fragrance.gender}
+
+            {/* Studio Spotlight & Radial Lighting Gradient */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,_rgba(255,255,255,0.08)_0%,_rgba(35,35,42,0.25)_45%,_rgba(15,15,18,0.8)_100%)] pointer-events-none z-[1]" />
+
+            {/* Ambient Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-black/30 pointer-events-none z-[2]" />
+
+            <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-[10px] font-semibold text-brand-gold border border-brand-gold/30 flex items-center gap-1.5 shadow-md z-10">
+              <span>{fragrance.gender === 'Masculino' ? '🎩' : fragrance.gender === 'Femenino' ? '🌸' : '✨'}</span>
+              <span>{fragrance.gender}</span>
+            </div>
+
+            {/* Official Le Désir Luxury Watermark Stamp (Bottom Right) */}
+            <div className="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 text-white shadow-lg pointer-events-none select-none">
+              <svg
+                className="w-3.5 h-3.5 text-brand-gold flex-shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              >
+                <rect x="9" y="2" width="6" height="4" rx="1" fill="currentColor" fillOpacity="0.25" />
+                <path d="M10 6h4v2h-4z" fill="currentColor" fillOpacity="0.5" />
+                <path d="M6 9h12l-1.5 12h-9L6 9z" stroke="currentColor" />
+                <line x1="8" y1="15" x2="16" y2="15" stroke="currentColor" strokeWidth="1" strokeOpacity="0.6" />
+              </svg>
+              <span className="text-[10px] font-editorial uppercase tracking-[0.2em] text-zinc-200 font-semibold leading-none">
+                Le Désir
+              </span>
             </div>
           </div>
 
-          {/* Performance meters */}
-          <div className="w-full grid grid-cols-2 gap-2 mt-4">
-            <div className="p-2.5 rounded-xl bg-white/5 border border-white/5 text-center">
-              <div className="flex items-center justify-center gap-1 text-brand-gold text-xs font-semibold mb-0.5">
-                <Clock className="w-3.5 h-3.5" />
-                <span>Longevidad</span>
+          {/* Visual Performance meters */}
+          <div className="w-full space-y-2.5 mt-4 p-3.5 rounded-2xl bg-zinc-950/70 border border-white/5">
+            {/* Longevity Bar */}
+            <div>
+              <div className="flex items-center justify-between text-xs mb-1">
+                <span className="flex items-center gap-1.5 text-brand-gold font-semibold text-[11px]">
+                  <Clock className="w-3.5 h-3.5" />
+                  Longevidad en Piel
+                </span>
+                <span className="text-[11px] text-zinc-300 font-medium">
+                  {fragrance.longevity}
+                </span>
               </div>
-              <p className="text-[11px] text-zinc-300">{fragrance.longevity}</p>
+              <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-amber-600 via-brand-gold to-yellow-300 transition-all duration-500 shadow-sm"
+                  style={{
+                    width:
+                      fragrance.longevity.includes('+12h') || fragrance.longevity.includes('Bestia')
+                        ? '100%'
+                        : fragrance.longevity.includes('8-12h')
+                        ? '85%'
+                        : '65%',
+                  }}
+                />
+              </div>
             </div>
-            <div className="p-2.5 rounded-xl bg-white/5 border border-white/5 text-center">
-              <div className="flex items-center justify-center gap-1 text-brand-gold text-xs font-semibold mb-0.5">
-                <Wind className="w-3.5 h-3.5" />
-                <span>Estela (Sillage)</span>
+
+            {/* Sillage Bar */}
+            <div>
+              <div className="flex items-center justify-between text-xs mb-1">
+                <span className="flex items-center gap-1.5 text-brand-gold font-semibold text-[11px]">
+                  <Wind className="w-3.5 h-3.5" />
+                  Estela & Proyección
+                </span>
+                <span className="text-[11px] text-zinc-300 font-medium">
+                  {fragrance.sillage}
+                </span>
               </div>
-              <p className="text-[11px] text-zinc-300">{fragrance.sillage}</p>
+              <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-amber-600 via-brand-gold to-amber-300 transition-all duration-500 shadow-sm"
+                  style={{
+                    width:
+                      fragrance.sillage.includes('Pesada') || fragrance.sillage.includes('Enorme')
+                        ? '100%'
+                        : fragrance.sillage.includes('Moderada')
+                        ? '70%'
+                        : '35%',
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -182,16 +253,21 @@ export const QuickViewModal: React.FC = () => {
                       key={p.size}
                       type="button"
                       onClick={() => setSelectedPrice(p)}
-                      className={`p-2 rounded-xl text-center border transition-all ${
+                      className={`p-2.5 rounded-xl text-center border transition-all ${
                         active
-                          ? 'border-brand-gold bg-brand-gold/15 text-white shadow-md'
-                          : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20'
+                          ? 'border-brand-gold bg-brand-gold/15 text-white shadow-md ring-1 ring-brand-gold/30'
+                          : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20 hover:text-zinc-200'
                       }`}
                     >
                       <span className="block text-xs font-bold">{p.size}</span>
-                      <span className="block text-[11px] text-brand-gold mt-0.5">
+                      <span className="block text-[11px] text-brand-gold font-semibold mt-0.5">
                         ${p.price.toLocaleString('es-AR')}
                       </span>
+                      {getPricePerMl(p) && (
+                        <span className="block text-[9px] text-zinc-400 mt-0.5 font-medium">
+                          {getPricePerMl(p)}
+                        </span>
+                      )}
                     </button>
                   );
                 })}
