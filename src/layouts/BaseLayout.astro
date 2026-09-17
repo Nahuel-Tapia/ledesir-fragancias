@@ -1,0 +1,70 @@
+---
+import '../styles/global.css';
+import { AnnouncementBar } from '../components/layout/AnnouncementBar';
+import { Navbar } from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer.astro';
+import { CartDrawer } from '../components/cart/CartDrawer';
+import { QuickViewModal } from '../components/catalog/QuickViewModal';
+import { MessageCircle } from 'lucide-react';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Le Désir Fragancias | Perfumería Árabe, Diseñador & Decants Exclusivos",
+  description = "Boutique de fragancias árabes, perfumes de diseñador y decants exclusivos de 5ml y 10ml. Envío a todo el país. Lattafa, Afnan, Dior, Tom Ford y más.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" class="dark scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO & Social Meta -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#121214" />
+  </head>
+  <body class="bg-brand-dark text-zinc-100 min-h-screen flex flex-col antialiased selection:bg-brand-gold selection:text-brand-dark">
+    <!-- Announcement Bar -->
+    <AnnouncementBar client:load />
+
+    <!-- Navigation Header -->
+    <Navbar client:load />
+
+    <!-- Main Page Content -->
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <!-- Global Interactive Islands -->
+    <CartDrawer client:load />
+    <QuickViewModal client:load />
+
+    <!-- Footer -->
+    <Footer />
+
+    <!-- Floating WhatsApp Quick Button -->
+    <a
+      href="https://wa.me/5492645162780?text=Hola%20Le%20D%C3%A9sir!%20Quisiera%20hacer%20una%20consulta"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="fixed bottom-6 right-6 z-40 p-3.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-2xl shadow-emerald-900/50 hover:scale-110 active:scale-95 transition-all duration-200 flex items-center justify-center group"
+      aria-label="Contactar por WhatsApp"
+    >
+      <MessageCircle class="w-6 h-6 fill-white" />
+      <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out px-0 group-hover:px-2 text-xs font-semibold">
+        WhatsApp
+      </span>
+    </a>
+  </body>
+</html>

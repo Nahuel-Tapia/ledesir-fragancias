@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CatalogView } from '../components/catalog/CatalogView';
+import { DecantPackBuilder } from '../components/catalog/DecantPackBuilder';
+import { Droplet, Sparkles, Check, HelpCircle } from 'lucide-react';
+---
+
+<BaseLayout
+  title="Decants Exclusivos (5ml & 10ml) | Le Désir Fragancias"
+  description="Prueba perfumes árabes y de diseñador en decants de 5ml (80 atomizaciones) y 10ml (160 atomizaciones). 100% auténticos en atomizadores de vidrio premium."
+>
+  <div class="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <span class="text-xs uppercase tracking-[0.25em] text-brand-gold font-semibold">
+        Le Désir Decanterie
+      </span>
+      <h1 class="font-editorial text-3xl sm:text-5xl font-bold text-white tracking-wide mt-2">
+        El Arte del Decant
+      </h1>
+      <p class="text-xs sm:text-sm text-zinc-400 mt-3 leading-relaxed">
+        Colecciona las mejores fragancias del mundo sin pagar de más. Cada decant se envasa artesanalmente al momento de tu compra en frascos de vidrio con atomizador de alta difusión.
+      </p>
+    </div>
+
+    <!-- Size Comparison Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-16">
+      <div class="p-6 sm:p-8 rounded-3xl bg-brand-surface border border-white/10 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
+              Formato Descubrimiento
+            </span>
+            <span class="text-xs text-zinc-400">~80 sprays</span>
+          </div>
+          <h3 class="font-editorial text-2xl font-bold text-white">Decant 5ml</h3>
+          <p class="text-xs text-zinc-300 mt-2 leading-relaxed">
+            Ideal para conocer una fragancia, usarla durante 3 o 4 semanas y evaluar su rendimiento y cumplidos en distintas situaciones.
+          </p>
+          <ul class="space-y-2 mt-4 text-xs text-zinc-400">
+            <li class="flex items-center gap-2"><Check class="w-3.5 h-3.5 text-brand-gold" /> Atomizador de vidrio portátil</li>
+            <li class="flex items-center gap-2"><Check class="w-3.5 h-3.5 text-brand-gold" /> Etiqueta de identificación dorada</li>
+            <li class="flex items-center gap-2"><Check class="w-3.5 h-3.5 text-brand-gold" /> Desde $6.800 ARS</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="p-6 sm:p-8 rounded-3xl bg-brand-surface border border-brand-gold/40 flex flex-col justify-between shadow-glow relative">
+        <span class="absolute -top-3 right-6 px-3 py-0.5 rounded-full bg-brand-gold text-brand-dark text-[10px] font-bold uppercase tracking-wider shadow">
+          Más Elegido
+        </span>
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-300 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
+              Formato Temporada
+            </span>
+            <span class="text-xs text-zinc-400">~160 sprays</span>
+          </div>
+          <h3 class="font-editorial text-2xl font-bold text-white">Decant 10ml</h3>
+          <p class="text-xs text-zinc-300 mt-2 leading-relaxed">
+            El tamaño perfecto para rotar fragancias toda una estación (primavera, verano o invierno) o para llevar de viaje en cabina.
+          </p>
+          <ul class="space-y-2 mt-4 text-xs text-zinc-400">
+            <li class="flex items-center gap-2"><Check class="w-3.5 h-3.5 text-brand-gold" /> Doble de contenido por menor precio por ml</li>
+            <li class="flex items-center gap-2"><Check class="w-3.5 h-3.5 text-brand-gold" /> Más de 2 meses de uso continuo</li>
+            <li class="flex items-center gap-2"><Check class="w-3.5 h-3.5 text-brand-gold" /> Desde $12.200 ARS</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Pack 3x Decants Builder -->
+    <DecantPackBuilder client:load />
+
+    <!-- Decants Catalog Grid -->
+    <CatalogView client:load />
+
+    <!-- FAQ Section -->
+    <div class="mt-20 max-w-3xl mx-auto">
+      <h3 class="font-editorial text-2xl font-bold text-white text-center mb-8">
+        Preguntas Frecuentes sobre Decants
+      </h3>
+
+      <div class="space-y-4 text-xs sm:text-sm">
+        <div class="p-5 rounded-2xl bg-brand-surface border border-white/5">
+          <h4 class="font-semibold text-white">¿El perfume es exactamente el mismo que el del frasco original?</h4>
+          <p class="text-zinc-400 mt-1.5 leading-relaxed">
+            Absolutamente sí. El líquido se extrae mediante jeringas estériles o trasvase por presión directo del frasco original al atomizador decant sin rebajar con alcohol ni alterar las notas.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-brand-surface border border-white/5">
+          <h4 class="font-semibold text-white">¿Cuánto tiempo dura el perfume dentro del decant?</h4>
+          <p class="text-zinc-400 mt-1.5 leading-relaxed">
+            Nuestros frascos de decant son de vidrio neutro con cierre hermético a rosca y precinto de sellado, lo que garantiza una conservación intacta superior a los 2 años si se mantiene protegido del sol y el calor.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-brand-surface border border-white/5">
+          <h4 class="font-semibold text-white">¿Cómo hago para pedir varios decants juntos?</h4>
+          <p class="text-zinc-400 mt-1.5 leading-relaxed">
+            Puedes seleccionar la medida (5ml o 10ml) en cada tarjeta, agregarlos a tu carrito y al finalizar tocar el botón "Coordinar Pedido por WhatsApp". Te armaremos el paquete consolidado en un solo envío.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

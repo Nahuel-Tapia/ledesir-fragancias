@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { HeroCarousel } from '../components/home/HeroCarousel';
+import CategoryBento from '../components/home/CategoryBento.astro';
+import DecantExplainer from '../components/home/DecantExplainer.astro';
+import InstagramFeed from '../components/home/InstagramFeed.astro';
+import { ProductCard } from '../components/catalog/ProductCard';
+import { INITIAL_FRAGRANCES } from '../data/initialFragrances';
+import { Flame, ArrowRight, Sparkles } from 'lucide-react';
+
+const featuredFragrances = INITIAL_FRAGRANCES.filter(
+  (f) => f.isFeatured || f.isBestSeller
+).slice(0, 4);
+---
+
+<BaseLayout
+  title="Le Désir Fragancias | Perfumería Árabe & Diseñador en Argentina"
+  description="Descubre los mejores perfumes árabes (Lattafa, Afnan, Armaf) y fragancias de diseñador en frasco completo y decants exclusivos de 5ml y 10ml."
+>
+  <!-- Hero Carousel Slider (Managed dynamically from Admin) -->
+  <HeroCarousel client:load />
+
+  <!-- Bento Grid of Collections -->
+  <CategoryBento />
+
+  <!-- Featured Fragrances Section -->
+  <section class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 mb-12">
+      <div>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 text-xs font-semibold uppercase tracking-wider mb-2">
+          <Flame class="w-3.5 h-3.5" />
+          Más Solicitados de la Boutique
+        </div>
+        <h2 class="font-editorial text-3xl sm:text-4xl font-bold text-white tracking-wide">
+          Las Fragancias Más Virales
+        </h2>
+        <p class="text-xs sm:text-sm text-zinc-400 mt-1 max-w-xl">
+          Disponibles en frascos sellados de origen o fraccionadas en decants de 5ml y 10ml para que descubras su evolución en tu piel.
+        </p>
+      </div>
+
+      <a
+        href="/catalogo"
+        class="inline-flex items-center gap-2 text-xs font-bold text-brand-gold uppercase tracking-wider hover:text-brand-gold-light transition group"
+      >
+        <span>Ver catálogo completo ({INITIAL_FRAGRANCES.length})</span>
+        <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+      </a>
+    </div>
+
+    <!-- 4 Featured Product Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {featuredFragrances.map((fragrance) => (
+        <ProductCard client:load fragrance={fragrance} />
+      ))}
+    </div>
+  </section>
+
+  <!-- Educational Decant Section -->
+  <DecantExplainer />
+
+  <!-- Discovery Box Feature Banner -->
+  <section class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-amber-950/40 via-brand-surface to-zinc-950 border border-brand-gold/30 p-8 sm:p-12 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
+      <div class="max-w-xl">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-gold/20 text-brand-gold-light text-xs font-semibold uppercase tracking-wider mb-3">
+          <Sparkles class="w-3.5 h-3.5" />
+          Edición Limitada
+        </span>
+        <h3 class="font-editorial text-3xl sm:text-4xl font-bold text-white tracking-wide">
+          Coffret Discovery: 5 Joyas de Oriente
+        </h3>
+        <p class="text-xs sm:text-sm text-zinc-300 mt-2 leading-relaxed">
+          ¿No sabes cuál elegir? Llévate un estuche premium con 5 decants de 5ml de los perfumes árabes más aclamados del mundo (Khamrah, Asad, 9PM, Club de Nuit y Bade'e Al Oud) por solo $32.900.
+        </p>
+        <div class="mt-6 flex items-center gap-4">
+          <a
+            href="/catalogo?categoria=extra"
+            class="px-6 py-3 rounded-xl bg-brand-gold text-brand-dark font-bold text-xs uppercase tracking-wider hover:bg-brand-gold-light transition shadow-lg shadow-brand-gold/20"
+          >
+            Adquirir Coffret Discovery
+          </a>
+        </div>
+      </div>
+
+      <img
+        src="https://images.unsplash.com/photo-1582211594533-268f4f1edcb9?auto=format&fit=crop&w=600&q=80"
+        alt="Coffret 5 Decants"
+        class="w-full max-w-xs rounded-2xl object-cover border border-white/10 shadow-2xl"
+      />
+    </div>
+  </section>
+
+  <!-- Community & Social Proof from Business Card -->
+  <InstagramFeed />
+</BaseLayout>

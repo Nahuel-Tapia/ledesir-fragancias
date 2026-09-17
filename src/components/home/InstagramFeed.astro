@@ -1,0 +1,106 @@
+﻿---
+import { Instagram, Phone, Star, MessageSquareQuote } from 'lucide-react';
+---
+
+<section class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="text-center max-w-xl mx-auto mb-12">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-brand-gold font-medium mb-3">
+      <Instagram class="w-3.5 h-3.5" />
+      @ledesir.fragancias
+    </div>
+    <h2 class="font-editorial text-3xl sm:text-4xl font-bold text-white tracking-wide">
+      La Comunidad Le Désir
+    </h2>
+    <p class="font-script text-lg sm:text-xl text-brand-gold-light mt-1">
+      "No olvides mencionarnos en tus historias!"
+    </p>
+  </div>
+
+  <!-- Testimonials Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+    <div class="p-6 rounded-2xl bg-brand-surface border border-white/5 shadow-luxury flex flex-col justify-between">
+      <div>
+        <div class="flex text-amber-400 gap-1 mb-3">
+          {[...Array(5)].map(() => (
+            <Star class="w-4 h-4 fill-amber-400" />
+          ))}
+        </div>
+        <p class="text-xs sm:text-sm text-zinc-300 italic leading-relaxed">
+          "Pedí el decant de Khamrah de Lattafa y quedé fascinado con la duración, me duró más de 12 horas en la campera. La presentación impecable."
+        </p>
+      </div>
+      <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between text-xs text-zinc-400">
+        <span class="font-medium text-white">Lucas M.</span>
+        <span>Cliente verificado • San Juan</span>
+      </div>
+    </div>
+
+    <div class="p-6 rounded-2xl bg-brand-surface border border-white/5 shadow-luxury flex flex-col justify-between">
+      <div>
+        <div class="flex text-amber-400 gap-1 mb-3">
+          {[...Array(5)].map(() => (
+            <Star class="w-4 h-4 fill-amber-400" />
+          ))}
+        </div>
+        <p class="text-xs sm:text-sm text-zinc-300 italic leading-relaxed">
+          "Pude probar Sauvage Elixir y Asad mano a mano en decants de 10ml antes de comprar el frasco. Es la mejor forma de comprar perfumes caros."
+        </p>
+      </div>
+      <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between text-xs text-zinc-400">
+        <span class="font-medium text-white">Agustín G.</span>
+        <span>Cliente verificado</span>
+      </div>
+    </div>
+
+    <div class="p-6 rounded-2xl bg-brand-surface border border-white/5 shadow-luxury flex flex-col justify-between">
+      <div>
+        <div class="flex text-amber-400 gap-1 mb-3">
+          {[...Array(5)].map(() => (
+            <Star class="w-4 h-4 fill-amber-400" />
+          ))}
+        </div>
+        <p class="text-xs sm:text-sm text-zinc-300 italic leading-relaxed">
+          "La atención por WhatsApp es súper cordial y rápida. Me asesoraron sobre notas gourmand y el envío llegó en 48hs con un decant de regalo."
+        </p>
+      </div>
+      <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between text-xs text-zinc-400">
+        <span class="font-medium text-white">Sofía R.</span>
+        <span>Cliente verificado</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Business Card Contact Banner -->
+  <div class="rounded-3xl bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 border border-white/15 p-8 sm:p-12 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-8">
+    <div class="text-center lg:text-left">
+      <h3 class="font-editorial text-2xl sm:text-3xl font-bold text-white tracking-wide">
+        ¿Dudas sobre qué fragancia elegir para tu ocasión?
+      </h3>
+      <p class="text-xs sm:text-sm text-zinc-400 mt-2 max-w-lg">
+        Escríbenos directamente y te asesoramos según tus gustos, clima y estilo de vida.
+      </p>
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-center gap-4">
+      <a
+        href="https://wa.me/5492645162780?text=Hola%20Le%20D%C3%A9sir!%20Quiero%20asesoramiento%20personalizado"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs tracking-wider uppercase flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition hover:-translate-y-0.5"
+      >
+        <Phone class="w-4 h-4 fill-white" />
+        WhatsApp: 2645162780
+      </a>
+
+      <a
+        href="https://instagram.com/ledesir.fragancias"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="px-6 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-200 border border-white/10 text-xs font-semibold tracking-wider uppercase flex items-center gap-2 transition hover:-translate-y-0.5"
+      >
+        <Instagram class="w-4 h-4" />
+        @ledesir.fragancias
+      </a>
+    </div>
+  </div>
+</section>

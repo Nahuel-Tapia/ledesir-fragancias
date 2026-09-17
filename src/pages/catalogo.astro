@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CatalogView } from '../components/catalog/CatalogView';
+---
+
+<BaseLayout
+  title="Catálogo Exclusivo | Le Désir Fragancias"
+  description="Explora nuestra colección completa de perfumes árabes, fragancias de diseñador y decants. Filtra por notas olfativas como Oud, Vainilla, Ámbar o Canela."
+>
+  <div class="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <span class="text-xs uppercase tracking-[0.25em] text-brand-gold font-semibold">
+        Le Désir Parfumerie
+      </span>
+      <h1 class="font-editorial text-3xl sm:text-5xl font-bold text-white tracking-wide mt-2">
+        Catálogo de Fragancias
+      </h1>
+      <p class="text-xs sm:text-sm text-zinc-400 mt-3 leading-relaxed">
+        Descubre acordes exquisitos en frasco completo o elige el formato decant (5ml / 10ml) para disfrutar de alta perfumería al mejor valor.
+      </p>
+    </div>
+
+    <!-- Interactive Filter & Catalog Grid -->
+    <CatalogView client:load />
+  </div>
+</BaseLayout>

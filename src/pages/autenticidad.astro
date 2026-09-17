@@ -1,0 +1,230 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ShieldCheck, CheckCircle2, AlertTriangle, Sparkles, HelpCircle, Layers, MessageCircle, ArrowRight } from 'lucide-react';
+---
+
+<BaseLayout
+  title="Guía de Autenticidad: Cómo saber si tu perfume árabe es original | Le Désir"
+  description="Aprende a verificar perfumes árabes auténticos (Lattafa, Afnan, Armaf). Hologramas 3D, batch codes, peso de tapas y diferencias con réplicas."
+>
+  <div class="py-12 sm:py-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-3">
+        <ShieldCheck class="w-4 h-4" />
+        Guía Oficial de Autenticidad
+      </div>
+      <h1 class="font-editorial text-3xl sm:text-5xl font-bold text-white tracking-wide leading-tight">
+        Cómo Saber si tu Perfume Árabe es 100% Original
+      </h1>
+      <p class="text-xs sm:text-sm text-zinc-300 mt-4 leading-relaxed">
+        El auge de la perfumería oriental ha provocado la aparición de imitaciones de baja calidad. En <strong>Le Désir Fragancias</strong> trabajamos exclusivamente con importación oficial verificada. Aquí te enseñamos a detectar una pieza genuina paso a paso.
+      </p>
+    </div>
+
+    <!-- The 5 Golden Rules -->
+    <div class="mb-20">
+      <div class="text-center mb-8">
+        <span class="text-xs uppercase tracking-[0.2em] text-brand-gold font-semibold">Inspección Rápida</span>
+        <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-white mt-1">Los 5 Mandamientos de Verificación</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Rule 1 -->
+        <div class="p-6 rounded-3xl bg-brand-surface border border-white/10 flex gap-4">
+          <div class="w-10 h-10 rounded-2xl bg-brand-gold/15 text-brand-gold flex items-center justify-center font-bold text-sm flex-shrink-0">
+            01
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white">El Holograma 3D de Seguridad</h3>
+            <p class="text-xs text-zinc-300 mt-1.5 leading-relaxed">
+              Tanto <strong>Lattafa</strong> como <strong>Afnan</strong> colocan un adhesivo holográfico circular en el frente o tope de la caja. Al moverlo bajo la luz, deben reflejarse relieves tridimensionales y microtexto nítido, nunca una pegatina opaca plana.
+            </p>
+          </div>
+        </div>
+
+        <!-- Rule 2 -->
+        <div class="p-6 rounded-3xl bg-brand-surface border border-white/10 flex gap-4">
+          <div class="w-10 h-10 rounded-2xl bg-brand-gold/15 text-brand-gold flex items-center justify-center font-bold text-sm flex-shrink-0">
+            02
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white">Batch Code Coincidente</h3>
+            <p class="text-xs text-zinc-300 mt-1.5 leading-relaxed">
+              En la base de la caja y en la base del frasco de cristal debe figurar el mismo código de lote (Batch Code) y fecha de elaboración/vencimiento. Si el número de la caja y el del frasco no coinciden, es una alerta roja.
+            </p>
+          </div>
+        </div>
+
+        <!-- Rule 3 -->
+        <div class="p-6 rounded-3xl bg-brand-surface border border-white/10 flex gap-4">
+          <div class="w-10 h-10 rounded-2xl bg-brand-gold/15 text-brand-gold flex items-center justify-center font-bold text-sm flex-shrink-0">
+            03
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white">Peso del Frasco y Tapas Metálicas</h3>
+            <p class="text-xs text-zinc-300 mt-1.5 leading-relaxed">
+              Las casas árabes invierten fuertemente en el peso del envase. Un frasco como <em>Khamrah</em> pesa más de 500 gramos de cristal macizo. Las tapas de <em>9 PM</em> y <em>Asad</em> son pesadas y cierran con solidez, nunca de plástico liviano hueco.
+            </p>
+          </div>
+        </div>
+
+        <!-- Rule 4 -->
+        <div class="p-6 rounded-3xl bg-brand-surface border border-white/10 flex gap-4">
+          <div class="w-10 h-10 rounded-2xl bg-brand-gold/15 text-brand-gold flex items-center justify-center font-bold text-sm flex-shrink-0">
+            04
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white">Atomizador & Difusión Fina</h3>
+            <p class="text-xs text-zinc-300 mt-1.5 leading-relaxed">
+              La válvula atomizadora de un perfume original dispara una nube fina y homogénea de amplio alcance. Las réplicas suelen disparar chorros concentrados, gotear o tener rebordes de pegamento visibles en el cuello.
+            </p>
+          </div>
+        </div>
+
+        <!-- Rule 5 (Spans 2 columns) -->
+        <div class="p-6 rounded-3xl bg-brand-surface border border-brand-gold/30 md:col-span-2 flex gap-4">
+          <div class="w-10 h-10 rounded-2xl bg-brand-gold/20 text-brand-gold flex items-center justify-center font-bold text-sm flex-shrink-0">
+            05
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white">La Prueba de Fuego: Salida sin Alcohol & Duración Real</h3>
+            <p class="text-xs text-zinc-300 mt-1.5 leading-relaxed">
+              Un clon trucho huele a alcohol etílico puro durante los primeros 5 minutos y desaparece de la piel al cabo de 1 o 2 horas. Un perfume árabe original tiene una alta concentración de aceites esenciales: se siente la canela, el oud o la vainilla inmediatamente, evoluciona durante horas y fija entre <strong>8 y 14 horas</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technical Cards by Brand -->
+    <div class="mb-20">
+      <div class="text-center mb-10">
+        <span class="text-xs uppercase tracking-[0.2em] text-brand-gold font-semibold">Detalle por Fabricante</span>
+        <h2 class="font-editorial text-2xl sm:text-3xl font-bold text-white mt-1">
+          Las Principales Casas Árabes y sus Sellos
+        </h2>
+      </div>
+
+      <div class="space-y-6">
+        <!-- Lattafa -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-brand-surface border border-white/10">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+            <div>
+              <span class="text-xs text-brand-gold font-semibold tracking-wider uppercase">Dubai, Emiratos Árabes</span>
+              <h3 class="font-editorial text-2xl font-bold text-white">Lattafa Perfumes & Maison Alhambra</h3>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 text-xs font-semibold">
+              Khamrah • Asad • Yara • Bade'e Al Oud
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-zinc-300 mt-4 pt-4 border-t border-white/5">
+            <div>
+              <strong class="text-white block mb-1">🔍 Sello Holográfico:</strong>
+              Presenta un círculo plateado reflectante en la esquina frontal o superior con el logo de Lattafa y texto tridimensional.
+            </div>
+            <div>
+              <strong class="text-white block mb-1">✨ Grabado de Atomizador:</strong>
+              En muchos modelos icónicos, el cuello o el pulsador del atomizador lleva el logo de la marca en relieve fino.
+            </div>
+            <div>
+              <strong class="text-white block mb-1">📦 Presentación de Lujo:</strong>
+              Cajas rígidas con textura gofrada, letras doradas en relieve y base forrada en terciopelo negro o marrón.
+            </div>
+          </div>
+        </div>
+
+        <!-- Afnan -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-brand-surface border border-white/10">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+            <div>
+              <span class="text-xs text-brand-gold font-semibold tracking-wider uppercase">Emiratos Árabes Unidos</span>
+              <h3 class="font-editorial text-2xl font-bold text-white">Afnan Perfumes</h3>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-blue-500/10 text-blue-300 border border-blue-500/20 text-xs font-semibold">
+              9 PM • Supremacy Series • Turathi Blue
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-zinc-300 mt-4 pt-4 border-t border-white/5">
+            <div>
+              <strong class="text-white block mb-1">📖 Apertura Tipo Libro:</strong>
+              Cajas de cartón denso tipo cofre con cierre magnético lateral que transmiten solidez al abrir.
+            </div>
+            <div>
+              <strong class="text-white block mb-1">🧲 Tapa Imantada:</strong>
+              El tapón de 9 PM es pesado, metálico y cuenta con un chasquido magnético muy característico al calzar.
+            </div>
+            <div>
+              <strong class="text-white block mb-1">🔬 Grabado Láser:</strong>
+              En la base del frasco de vidrio, el batch code viene grabado a láser con nitidez milimétrica.
+            </div>
+          </div>
+        </div>
+
+        <!-- Armaf -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-brand-surface border border-white/10">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+            <div>
+              <span class="text-xs text-brand-gold font-semibold tracking-wider uppercase">Sterling Parfums</span>
+              <h3 class="font-editorial text-2xl font-bold text-white">Armaf Perfumes</h3>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 text-xs font-semibold">
+              Club de Nuit Intense Man • Sillage • Milestone
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-zinc-300 mt-4 pt-4 border-t border-white/5">
+            <div>
+              <strong class="text-white block mb-1">🦁 Sello de Sterling:</strong>
+              Fabricado bajo licencia de Sterling Parfums en Francia o Emiratos, con el león heráldico grabado en la base.
+            </div>
+            <div>
+              <strong class="text-white block mb-1">💎 Cristales Pulidos:</strong>
+              El colgante con cadena y los 3 cristales de la botella negra mate son de strass pulido, no plástico pegado.
+            </div>
+            <div>
+              <strong class="text-white block mb-1">🔒 Celofán Termosellado:</strong>
+              El envoltorio exterior viene doblado en fábrica con sellos circulares térmicos sin sobrantes arrugados.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Le Désir Guarantee & Help Callout -->
+    <div class="rounded-3xl bg-gradient-to-r from-zinc-950 via-brand-surface to-zinc-950 border border-brand-gold/40 p-8 sm:p-12 shadow-2xl text-center space-y-6">
+      <div class="w-14 h-14 rounded-full bg-brand-gold/15 text-brand-gold mx-auto flex items-center justify-center">
+        <CheckCircle2 class="w-8 h-8" />
+      </div>
+      <div>
+        <h3 class="font-editorial text-2xl sm:text-3xl font-bold text-white">
+          La Garantía Le Désir Fragancias
+        </h3>
+        <p class="text-xs sm:text-sm text-zinc-300 mt-2 max-w-xl mx-auto leading-relaxed">
+          Cada botella cerrada y cada decant que sale de nuestro taller es verificado lote por lote. Decantamos con jeringas graduadas estériles para mantener el 100% de la pureza de la fragancia original.
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+        <a
+          href="/catalogo"
+          class="px-6 py-3.5 rounded-xl bg-brand-gold text-brand-dark font-bold text-xs uppercase tracking-wider hover:bg-brand-gold-light transition shadow-lg shadow-brand-gold/20"
+        >
+          Explorar Catálogo Verificado →
+        </a>
+
+        <a
+          href="https://wa.me/5492645162780?text=Hola%20Le%20D%C3%A9sir!%20Tengo%20una%20duda%20sobre%20la%20autenticidad%20de%20un%20perfume"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-6 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-200 border border-white/10 font-semibold text-xs tracking-wider uppercase flex items-center gap-2 transition"
+        >
+          <MessageCircle class="w-4 h-4 text-emerald-400" />
+          ¿Dudas con tu perfume? Consúltanos por WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

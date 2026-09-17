@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { AdminDashboard } from '../../components/admin/AdminDashboard';
+---
+
+<BaseLayout
+  title="Panel de Administración | Le Désir Fragancias"
+  description="Gestor de catálogo, banners de inicio y cupones de Le Désir Fragancias."
+>
+  <div class="min-h-screen bg-brand-dark/50 py-6">
+    <AdminDashboard client:only="react" />
+  </div>
+</BaseLayout>
