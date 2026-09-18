@@ -15,6 +15,7 @@ import {
   $isSyncing,
 } from '../../stores/catalogStore';
 import type { Fragrance, BannerSlide } from '../../types/fragrance';
+import { ImageUploader } from './ImageUploader';
 import {
   Package,
   Image as ImageIcon,
@@ -86,6 +87,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
     stock: 15,
     isBestSeller: false,
     isFeatured: true,
+    imageFit: 'cover',
   });
 
   // Form states for Banner
@@ -180,6 +182,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
       stock: 15,
       isBestSeller: false,
       isFeatured: true,
+      imageFit: 'cover',
     });
     setIsCreatingProduct(true);
   };
@@ -768,15 +771,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
                 />
               </div>
 
-              <div>
-                <label className="block text-zinc-400 mb-1">URL de la Imagen (Alta Calidad)</label>
-                <input
-                  type="text"
-                  value={productForm.image || ''}
-                  onChange={(e) => setProductForm({ ...productForm, image: e.target.value })}
-                  className="w-full p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white focus:outline-none focus:border-brand-gold"
-                />
-              </div>
+              <ImageUploader
+                value={productForm.image || ''}
+                onChange={(url) => setProductForm({ ...productForm, image: url })}
+                imageFit={productForm.imageFit || 'cover'}
+                onImageFitChange={(fit) => setProductForm({ ...productForm, imageFit: fit })}
+                label="Imagen del Perfume (Catálogo)"
+                aspectRatio="product"
+                showWatermarkPreview={true}
+              />
 
               {/* Precios y Medidas */}
               <div className="p-4 rounded-2xl bg-zinc-950/80 border border-white/10 space-y-3">
@@ -949,15 +952,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
                 </div>
               </div>
 
-              <div>
-                <label className="block text-zinc-400 mb-1">URL de la Imagen de Fondo</label>
-                <input
-                  type="text"
-                  value={bannerForm.imageUrl || ''}
-                  onChange={(e) => setBannerForm({ ...bannerForm, imageUrl: e.target.value })}
-                  className="w-full p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white focus:outline-none focus:border-brand-gold"
-                />
-              </div>
+              <ImageUploader
+                value={bannerForm.imageUrl || ''}
+                onChange={(url) => setBannerForm({ ...bannerForm, imageUrl: url })}
+                label="Imagen de Fondo del Slide (Hero)"
+                aspectRatio="banner"
+                showWatermarkPreview={false}
+              />
 
               <div className="pt-4 flex justify-end gap-3 border-t border-white/10">
                 <button

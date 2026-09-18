@@ -44,17 +44,25 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
     return null;
   };
 
+  const isContainFit =
+    fragrance.imageFit === 'contain' ||
+    (!fragrance.imageFit &&
+      (fragrance.image.toLowerCase().includes('.png') ||
+        fragrance.image.startsWith('data:image/png')));
+
   return (
     <article
       onClick={() => openQuickView(fragrance)}
       className="group relative rounded-2xl bg-brand-surface/70 border border-white/10 hover:border-brand-gold/40 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-luxury hover:shadow-glow cursor-pointer"
     >
       {/* Top Image Container with Studio Lighting Backdrop */}
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-b from-zinc-800/90 via-zinc-900 to-zinc-950">
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-b from-zinc-800/90 via-zinc-900 to-zinc-950 flex items-center justify-center">
         <img
           src={fragrance.image}
           alt={fragrance.name}
-          className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out relative z-0"
+          className={`h-full w-full ${
+            isContainFit ? 'object-contain p-4' : 'object-cover'
+          } object-center group-hover:scale-105 transition-transform duration-500 ease-out relative z-0`}
           loading="lazy"
         />
 

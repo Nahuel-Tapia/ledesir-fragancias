@@ -53,6 +53,12 @@ export const QuickViewModal: React.FC = () => {
     `✨ *¡Hola Le Désir Fragancias!* Me interesa comprar:\n• *${fragrance.name}* (${fragrance.brand})\n• Medida: ${selectedPrice.size} ($${selectedPrice.price.toLocaleString('es-AR')})\n¿Tienen disponibilidad para coordinar el envío?`
   );
 
+  const isContainFit =
+    fragrance.imageFit === 'contain' ||
+    (!fragrance.imageFit &&
+      (fragrance.image.toLowerCase().includes('.png') ||
+        fragrance.image.startsWith('data:image/png')));
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
@@ -73,11 +79,13 @@ export const QuickViewModal: React.FC = () => {
 
         {/* Left Column: Image */}
         <div className="w-full md:w-1/2 flex flex-col items-center">
-          <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-gradient-to-b from-zinc-800/90 via-zinc-900 to-zinc-950 border border-white/10 shadow-luxury">
+          <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-gradient-to-b from-zinc-800/90 via-zinc-900 to-zinc-950 border border-white/10 shadow-luxury flex items-center justify-center">
             <img
               src={fragrance.image}
               alt={fragrance.name}
-              className="w-full h-full object-cover object-center relative z-0"
+              className={`w-full h-full ${
+                isContainFit ? 'object-contain p-6' : 'object-cover'
+              } object-center relative z-0`}
             />
 
             {/* Studio Spotlight & Radial Lighting Gradient */}

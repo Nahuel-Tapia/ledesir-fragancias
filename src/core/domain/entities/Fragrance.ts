@@ -41,6 +41,7 @@ export interface FragranceProps {
   stock: number;
   discountPercentage?: number;
   inspiredBy?: string;
+  imageFit?: 'cover' | 'contain';
   createdAt?: string;
   updatedAt?: string;
 }
