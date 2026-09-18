@@ -188,79 +188,80 @@ export const QuickViewModal: React.FC = () => {
               <p className="text-xs text-zinc-400 mt-0.5">{fragrance.subtitle}</p>
             )}
 
-            <div className="mt-2.5 flex flex-wrap items-center gap-2">
-              {fragrance.inspiredBy && (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-medium">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                  <span>{fragrance.inspiredBy}</span>
-                </div>
-              )}
-
-              {fragrance.fragranticaUrl && (
-                <a
-                  href={fragrance.fragranticaUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-brand-gold/40 hover:border-brand-gold text-white hover:text-brand-gold text-xs font-medium transition shadow-sm group"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-gold animate-pulse" />
-                  <span>Ficha en <strong className="font-serif italic text-amber-300">Fragrantica</strong></span>
-                  <ExternalLink className="w-3 h-3 text-zinc-400 group-hover:text-brand-gold transition-colors" />
-                </a>
-              )}
-            </div>
+            {fragrance.inspiredBy && (
+              <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-medium">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>{fragrance.inspiredBy}</span>
+              </div>
+            )}
 
             <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mt-3">
               {fragrance.description}
             </p>
 
-            {/* Visual Olfactory Pyramid */}
-            <div className="mt-5 p-4 rounded-2xl bg-zinc-950/60 border border-white/5">
-              <h3 className="text-xs font-semibold text-brand-gold-light uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5" />
-                Pirámide Olfativa
-              </h3>
-
-              <div className="space-y-2.5 text-xs">
-                <div>
-                  <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-0.5">
-                    Notas de Salida (Primeros 15 min):
-                  </span>
-                  <div className="flex flex-wrap gap-1">
-                    {fragrance.pyramid.top.map((n, i) => (
-                      <span key={i} className="px-2 py-0.5 rounded bg-white/5 text-zinc-200 text-[11px]">
-                        {n}
-                      </span>
-                    ))}
+            {/* Ocasión & Estación de Uso */}
+            {(fragrance.occasion || fragrance.season) && (
+              <div className="grid grid-cols-2 gap-3 mt-4">
+                {fragrance.occasion && (
+                  <div className="p-3 rounded-2xl bg-zinc-950/60 border border-white/5">
+                    <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">
+                      Ocasión Recomendada:
+                    </span>
+                    <span className="text-xs text-white font-medium flex items-center gap-1.5">
+                      <span>✨</span>
+                      <span>{fragrance.occasion}</span>
+                    </span>
                   </div>
-                </div>
-
-                <div>
-                  <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-0.5">
-                    Notas de Corazón (El alma del perfume):
-                  </span>
-                  <div className="flex flex-wrap gap-1">
-                    {fragrance.pyramid.heart.map((n, i) => (
-                      <span key={i} className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 text-[11px]">
-                        {n}
-                      </span>
-                    ))}
+                )}
+                {fragrance.season && (
+                  <div className="p-3 rounded-2xl bg-zinc-950/60 border border-white/5">
+                    <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">
+                      Estación Ideal:
+                    </span>
+                    <span className="text-xs text-brand-gold font-medium flex items-center gap-1.5">
+                      <span>🌤️</span>
+                      <span>{fragrance.season}</span>
+                    </span>
                   </div>
-                </div>
-
-                <div>
-                  <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-0.5">
-                    Notas de Fondo (Fijación profunda):
-                  </span>
-                  <div className="flex flex-wrap gap-1">
-                    {fragrance.pyramid.base.map((n, i) => (
-                      <span key={i} className="px-2 py-0.5 rounded bg-white/10 text-zinc-100 text-[11px]">
-                        {n}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                )}
               </div>
+            )}
+
+            {/* Ficha Técnica y Notas Olfativas en Fragrantica */}
+            <div className="mt-4 p-4 rounded-2xl bg-zinc-950/80 border border-brand-gold/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                  <span className="text-xs font-bold text-white font-editorial tracking-wide">
+                    Pirámide & Notas Olfativas
+                  </span>
+                </div>
+                <p className="text-[11px] text-zinc-400 mt-0.5">
+                  Ficha técnica oficial, notas de salida, corazón y fondo en Fragrantica.
+                </p>
+              </div>
+
+              {fragrance.fragranticaUrl ? (
+                <a
+                  href={fragrance.fragranticaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-xl bg-brand-gold hover:bg-brand-gold-light text-brand-dark font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-lg shadow-brand-gold/20 flex-shrink-0"
+                >
+                  <span className="font-serif italic font-semibold">Fragrantica</span>
+                  <span>Ver Notas ↗</span>
+                </a>
+              ) : (
+                <a
+                  href={`https://www.google.com/search?q=${encodeURIComponent(`${fragrance.brand} ${fragrance.name} fragrantica`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white border border-white/10 text-xs font-medium flex items-center justify-center gap-1.5 transition flex-shrink-0"
+                >
+                  <span>Buscar en Fragrantica</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              )}
             </div>
 
             {/* Format Selection */}

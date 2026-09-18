@@ -85,6 +85,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
     longevity: 'Modo Bestia (+12h)',
     sillage: 'Pesada / Enorme',
     gender: 'Unisex',
+    occasion: 'Noche / Cita Romántica',
+    season: 'Otoño / Invierno',
     stock: 15,
     isBestSeller: false,
     isFeatured: true,
@@ -181,6 +183,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
       longevity: 'Modo Bestia (+12h)',
       sillage: 'Pesada / Enorme',
       gender: 'Unisex',
+      occasion: 'Noche / Cita Romántica',
+      season: 'Otoño / Invierno',
       stock: 15,
       isBestSeller: false,
       isFeatured: true,
@@ -744,6 +748,68 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
                     <option value="Unisex">Unisex</option>
                     <option value="Masculino">Masculino</option>
                     <option value="Femenino">Femenino</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Ocasión de Uso y Estación del Año */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-zinc-400 mb-1">Ocasión de Uso Recomendada</label>
+                  <select
+                    value={productForm.occasion || 'Noche / Cita Romántica'}
+                    onChange={(e) => setProductForm({ ...productForm, occasion: e.target.value })}
+                    className="w-full p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white focus:outline-none focus:border-brand-gold text-xs"
+                  >
+                    <option value="Noche / Cita Romántica">🌙 Noche / Cita Romántica</option>
+                    <option value="Fiesta / Salidas Nocturnas">🎉 Fiesta / Salidas Nocturnas</option>
+                    <option value="Uso Diario / Oficina">💼 Uso Diario / Oficina</option>
+                    <option value="Eventos Elegantes / Gala">✨ Eventos Elegantes / Gala</option>
+                    <option value="Casual / Todo Momento">👕 Casual / Todo Momento</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-zinc-400 mb-1">Estación del Año Ideal</label>
+                  <select
+                    value={productForm.season || 'Otoño / Invierno'}
+                    onChange={(e) => setProductForm({ ...productForm, season: e.target.value })}
+                    className="w-full p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white focus:outline-none focus:border-brand-gold text-xs"
+                  >
+                    <option value="Otoño / Invierno">❄️ Otoño / Invierno (Climas Fríos)</option>
+                    <option value="Primavera / Verano">☀️ Primavera / Verano (Climas Cálidos)</option>
+                    <option value="Todo el Año (Versátil)">🌤️ Todo el Año (Versátil)</option>
+                    <option value="Invierno">⛄ Solo Invierno</option>
+                    <option value="Verano">🌴 Solo Verano</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Longevidad y Estela (Rendimiento) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-zinc-400 mb-1">Longevidad en Piel (Duración)</label>
+                  <select
+                    value={productForm.longevity || 'Modo Bestia (+12h)'}
+                    onChange={(e) => setProductForm({ ...productForm, longevity: e.target.value })}
+                    className="w-full p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white focus:outline-none focus:border-brand-gold text-xs"
+                  >
+                    <option value="Modo Bestia (+12h)">🔥 Modo Bestia (+12h)</option>
+                    <option value="Larga Duración (8-12h)">⏱️ Larga Duración (8-12h)</option>
+                    <option value="Moderada (6-8h)">⌛ Moderada (6-8h)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-zinc-400 mb-1">Estela & Proyección</label>
+                  <select
+                    value={productForm.sillage || 'Pesada / Enorme'}
+                    onChange={(e) => setProductForm({ ...productForm, sillage: e.target.value })}
+                    className="w-full p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white focus:outline-none focus:border-brand-gold text-xs"
+                  >
+                    <option value="Pesada / Enorme">💨 Pesada / Enorme (Llena habitación)</option>
+                    <option value="Moderada">🌬️ Moderada (A un brazo de distancia)</option>
+                    <option value="Íntima">🫧 Íntima (A flor de piel)</option>
                   </select>
                 </div>
               </div>

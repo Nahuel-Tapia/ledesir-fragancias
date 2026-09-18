@@ -34,10 +34,12 @@ export interface Fragrance {
   image: string;
   gallery?: string[];
   prices: DecantPrice[]; // 5ml, 10ml, 100ml
-  pyramid: OlfactoryPyramid;
-  longevity: 'Moderada (6-8h)' | 'Larga Duración (8-12h)' | 'Modo Bestia (+12h)';
-  sillage: 'Íntima' | 'Moderada' | 'Pesada / Enorme';
+  pyramid?: OlfactoryPyramid;
+  longevity: 'Moderada (6-8h)' | 'Larga Duración (8-12h)' | 'Modo Bestia (+12h)' | string;
+  sillage: 'Íntima' | 'Moderada' | 'Pesada / Enorme' | string;
   gender: 'Unisex' | 'Masculino' | 'Femenino';
+  occasion?: string; // Ej: Noche / Cita Romántica, Uso Diario, Fiesta, etc.
+  season?: string;   // Ej: Otoño / Invierno, Primavera / Verano, Todo el año
   isFeatured?: boolean;
   isBestSeller?: boolean;
   isNew?: boolean;

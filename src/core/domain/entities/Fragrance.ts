@@ -31,10 +31,12 @@ export interface FragranceProps {
   image: string;
   gallery?: string[];
   prices: DecantPrice[];
-  pyramid: OlfactoryPyramid;
+  pyramid?: OlfactoryPyramid;
   longevity: string;
   sillage: string;
   gender: 'Unisex' | 'Masculino' | 'Femenino';
+  occasion?: string;
+  season?: string;
   isFeatured?: boolean;
   isBestSeller?: boolean;
   isNew?: boolean;

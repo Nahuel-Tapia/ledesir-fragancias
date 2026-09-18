@@ -162,42 +162,49 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
             {fragrance.name}
           </h3>
 
-          {/* Inspiration hint & Fragrantica Pill */}
-          <div className="mt-1 flex flex-wrap items-center gap-2">
-            {fragrance.inspiredBy && (
-              <div className="flex items-center gap-1.5 text-[11px] text-amber-300/90 font-medium line-clamp-1">
-                <Sparkles className="w-3 h-3 text-brand-gold flex-shrink-0" />
-                <span>{fragrance.inspiredBy}</span>
-              </div>
-            )}
+          {/* Inspiration hint */}
+          {fragrance.inspiredBy && (
+            <div className="mt-1 flex items-center gap-1.5 text-[11px] text-amber-300/90 font-medium line-clamp-1">
+              <Sparkles className="w-3 h-3 text-brand-gold flex-shrink-0" />
+              <span>{fragrance.inspiredBy}</span>
+            </div>
+          )}
 
-            {fragrance.fragranticaUrl && (
+          {/* Ocasión & Estación Badges */}
+          {(fragrance.occasion || fragrance.season) && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {fragrance.occasion && (
+                <span className="text-[10px] text-zinc-300 bg-white/5 px-2 py-0.5 rounded-md border border-white/10 flex items-center gap-1 font-medium">
+                  <span>✨</span>
+                  <span>{fragrance.occasion}</span>
+                </span>
+              )}
+              {fragrance.season && (
+                <span className="text-[10px] text-amber-200/90 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20 flex items-center gap-1 font-medium">
+                  <span>🌤️</span>
+                  <span>{fragrance.season}</span>
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Fragrantica Link (Notas y Acordes) */}
+          {fragrance.fragranticaUrl && (
+            <div className="mt-2.5" onClick={(e) => e.stopPropagation()}>
               <a
                 href={fragrance.fragranticaUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 hover:bg-amber-500/15 border border-white/10 hover:border-amber-400/40 text-[10px] text-zinc-300 hover:text-amber-300 transition-all group/frag"
-                title="Ver ficha técnica y acordes en Fragrantica"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900/90 hover:bg-amber-500/15 border border-white/10 hover:border-amber-400/40 text-[11px] text-zinc-300 hover:text-amber-300 transition-all group/frag shadow-sm"
+                title="Ver notas completas, acordes y votos en Fragrantica"
               >
-                <span className="w-1 h-1 rounded-full bg-amber-400 animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
                 <span className="font-serif italic font-semibold text-amber-300/90">Fragrantica</span>
-                <ExternalLink className="w-2.5 h-2.5 text-zinc-500 group-hover/frag:text-amber-300 transition-colors" />
+                <span className="text-zinc-400 group-hover/frag:text-white transition-colors">Notas & acordes</span>
+                <ExternalLink className="w-3 h-3 text-zinc-500 group-hover/frag:text-amber-300 transition-colors" />
               </a>
-            )}
-          </div>
-
-          {/* Key olfactory notes summary */}
-          <div className="flex flex-wrap gap-1 mt-2.5">
-            {fragrance.pyramid.top.slice(0, 3).map((note, idx) => (
-              <span
-                key={idx}
-                className="text-[10px] text-zinc-400 bg-white/5 px-2 py-0.5 rounded-full border border-white/5"
-              >
-                {note}
-              </span>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Size / Decant Pill Selector */}
