@@ -14,7 +14,7 @@ import {
   syncCatalogWithBackend,
   $isSyncing,
 } from '../../stores/catalogStore';
-import type { Fragrance, BannerSlide } from '../../types/fragrance';
+import type { Fragrance, BannerSlide, OlfactoryFamily } from '../../types/fragrance';
 import { ImageUploader } from './ImageUploader';
 import { BrandSelector } from './BrandSelector';
 import {
@@ -33,7 +33,36 @@ import {
   Clock,
   ExternalLink,
   LogOut,
+  Check,
+  X,
 } from 'lucide-react';
+
+const PRESET_OCCASIONS = [
+  '🌙 Noche / Cita Romántica',
+  '🎉 Fiesta / Salidas Nocturnas',
+  '💼 Uso Diario / Oficina',
+  '✨ Eventos Elegantes / Gala',
+  '👕 Casual / Todo Momento',
+  '☀️ Día / Clima Cálido',
+  '🏋️‍♂️ Deportivo / Casual',
+];
+
+const GENERIC_NOTE_PROFILES: {
+  id: OlfactoryFamily;
+  label: string;
+  icon: string;
+  notes: string;
+  testVibe: string;
+}[] = [
+  { id: 'Gourmand / Dulce', label: 'Gourmand / Dulce', icon: '🍯', notes: 'Vainilla, Praliné, Caramelo, Canela', testVibe: 'Dulce en Test Olfativo' },
+  { id: 'Oriental / Especiado', label: 'Oriental / Especiado', icon: '🌶️', notes: 'Pimienta, Tabaco, Café, Especias cálidas', testVibe: 'Especiado en Test Olfativo' },
+  { id: 'Cítrico / Fresco', label: 'Cítrico / Fresco', icon: '🍋', notes: 'Bergamota, Limón, Pomelo, Menta', testVibe: 'Fresco en Test Olfativo' },
+  { id: 'Amaderado', label: 'Amaderado / Oud', icon: '🪵', notes: 'Cedro, Sándalo, Vetiver, Oud de Dubái', testVibe: 'Amaderado en Test Olfativo' },
+  { id: 'Aromático / Fougère', label: 'Aromático / Fougère', icon: '🌿', notes: 'Lavanda, Salvia, Romero, Herbal', testVibe: 'Fresco en Test Olfativo' },
+  { id: 'Cuero / Ahumado', label: 'Cuero / Ahumado', icon: '👞', notes: 'Cuero negro, Humo de Abedul, Incienso', testVibe: 'Especiado / Amaderado' },
+  { id: 'Acuático / Marino', label: 'Acuático / Marino', icon: '🌊', notes: 'Brisa marina, Salitre, Limpio oceánico', testVibe: 'Fresco en Test Olfativo' },
+  { id: 'Floral', label: 'Floral Noble', icon: '🌸', notes: 'Jazmín, Rosa, Flor de Azahar, Nardos', testVibe: 'Floral en Catálogo' },
+];
 
 interface BackendInfo {
   status: string;
@@ -86,6 +115,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
     sillage: 'Pesada / Enorme',
     gender: 'Unisex',
     occasion: 'Noche / Cita Romántica',
+    occasions: ['Noche / Cita Romántica'],
     season: 'Otoño / Invierno',
     stock: 15,
     isBestSeller: false,
@@ -93,6 +123,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
     imageFit: 'cover',
     fragranticaUrl: '',
   });
+
+  const [customOccasion, setCustomOccasion] = useState('');
 
   // Form states for Banner
   const [bannerForm, setBannerForm] = useState<Partial<BannerSlide>>({
@@ -156,7 +188,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
 
   const handleEditProduct = (fragrance: Fragrance) => {
     setEditingFragrance(fragrance);
-    setProductForm(JSON.parse(JSON.stringify(fragrance)));
+    const form = JSON.parse(JSON.stringify(fragrance));
+    if (!form.occasions || form.occasions.length === 0) {
+      form.occasions = form.occasion ? [form.occasion] : ['Noche / Cita Romántica'];
+    }
+    if (!form.families || form.families.length === 0) {
+      form.families = ['Oriental / Especiado'];
+    }
+    setProductForm(form);
+    setCustomOccasion('');
     setIsCreatingProduct(true);
   };
 
@@ -184,6 +224,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
       sillage: 'Pesada / Enorme',
       gender: 'Unisex',
       occasion: 'Noche / Cita Romántica',
+      occasions: ['Noche / Cita Romántica'],
       season: 'Otoño / Invierno',
       stock: 15,
       isBestSeller: false,
@@ -191,6 +232,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
       imageFit: 'cover',
       fragranticaUrl: '',
     });
+    setCustomOccasion('');
     setIsCreatingProduct(true);
   };
 
@@ -201,15 +243,30 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
       return;
     }
 
+    const occasionsList =
+      productForm.occasions && productForm.occasions.length > 0
+        ? productForm.occasions
+        : ['Todo Momento'];
+
+    const dataToSave: Partial<Fragrance> = {
+      ...productForm,
+      occasions: occasionsList,
+      occasion: occasionsList[0] || 'Todo Momento',
+      families:
+        productForm.families && productForm.families.length > 0
+          ? productForm.families
+          : ['Oriental / Especiado'],
+    };
+
     if (editingFragrance) {
-      await updateFragrance(editingFragrance.id, productForm);
+      await updateFragrance(editingFragrance.id, dataToSave);
     } else {
       const newId =
-        (productForm.name?.toLowerCase().replace(/\s+/g, '-') || 'frag') +
+        (dataToSave.name?.toLowerCase().replace(/\s+/g, '-') || 'frag') +
         '-' +
         Date.now().toString().slice(-4);
       await addFragrance({
-        ...(productForm as Fragrance),
+        ...(dataToSave as Fragrance),
         id: newId,
       });
     }
@@ -752,37 +809,212 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
                 </div>
               </div>
 
-              {/* Ocasión de Uso y Estación del Año */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-zinc-400 mb-1">Ocasión de Uso Recomendada</label>
-                  <select
-                    value={productForm.occasion || 'Noche / Cita Romántica'}
-                    onChange={(e) => setProductForm({ ...productForm, occasion: e.target.value })}
-                    className="w-full p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white focus:outline-none focus:border-brand-gold text-xs"
-                  >
-                    <option value="Noche / Cita Romántica">🌙 Noche / Cita Romántica</option>
-                    <option value="Fiesta / Salidas Nocturnas">🎉 Fiesta / Salidas Nocturnas</option>
-                    <option value="Uso Diario / Oficina">💼 Uso Diario / Oficina</option>
-                    <option value="Eventos Elegantes / Gala">✨ Eventos Elegantes / Gala</option>
-                    <option value="Casual / Todo Momento">👕 Casual / Todo Momento</option>
-                  </select>
+              {/* 1. Ocasiones de Uso Recomendadas (Multi-Selección) */}
+              <div className="p-4 rounded-2xl bg-zinc-950/70 border border-white/10 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                  <div>
+                    <label className="text-white font-semibold text-xs flex items-center gap-1.5">
+                      <span>✨</span>
+                      <span>Ocasiones de Uso Recomendadas (Puedes sumar más de una)</span>
+                    </label>
+                    <p className="text-[11px] text-zinc-400">
+                      Elige los momentos ideales para esta fragancia. Se mostrarán como etiquetas en el catálogo y permitirán vincularla con el Test Olfativo.
+                    </p>
+                  </div>
+                  <span className="text-[10px] text-brand-gold bg-brand-gold/10 px-2.5 py-0.5 rounded-full font-semibold self-start sm:self-auto">
+                    {productForm.occasions?.length || 0} seleccionadas
+                  </span>
                 </div>
 
-                <div>
-                  <label className="block text-zinc-400 mb-1">Estación del Año Ideal</label>
-                  <select
-                    value={productForm.season || 'Otoño / Invierno'}
-                    onChange={(e) => setProductForm({ ...productForm, season: e.target.value })}
-                    className="w-full p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white focus:outline-none focus:border-brand-gold text-xs"
-                  >
-                    <option value="Otoño / Invierno">❄️ Otoño / Invierno (Climas Fríos)</option>
-                    <option value="Primavera / Verano">☀️ Primavera / Verano (Climas Cálidos)</option>
-                    <option value="Todo el Año (Versátil)">🌤️ Todo el Año (Versátil)</option>
-                    <option value="Invierno">⛄ Solo Invierno</option>
-                    <option value="Verano">🌴 Solo Verano</option>
-                  </select>
+                {/* Preset Occasion Pills */}
+                <div className="flex flex-wrap gap-1.5">
+                  {PRESET_OCCASIONS.map((occ) => {
+                    const isSelected = (productForm.occasions || []).includes(occ);
+                    return (
+                      <button
+                        key={occ}
+                        type="button"
+                        onClick={() => {
+                          const current = productForm.occasions || [];
+                          let updated: string[];
+                          if (isSelected) {
+                            updated = current.filter((o) => o !== occ);
+                          } else {
+                            updated = [...current, occ];
+                          }
+                          setProductForm({
+                            ...productForm,
+                            occasions: updated,
+                            occasion: updated[0] || 'Todo Momento',
+                          });
+                        }}
+                        className={`text-xs px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 ${
+                          isSelected
+                            ? 'bg-brand-gold/20 text-brand-gold border-brand-gold font-semibold shadow-sm'
+                            : 'bg-zinc-900/90 text-zinc-400 border-white/10 hover:border-white/20 hover:text-white'
+                        }`}
+                      >
+                        {isSelected ? <Check className="w-3 h-3 text-brand-gold" /> : <Plus className="w-3 h-3 text-zinc-500" />}
+                        <span>{occ}</span>
+                      </button>
+                    );
+                  })}
                 </div>
+
+                {/* Custom Occasion Input */}
+                <div className="pt-2 border-t border-white/5 flex items-center gap-2">
+                  <input
+                    type="text"
+                    placeholder="Escribir otra ocasión personalizada (ej: Cenas Íntimas, Viajes, etc.)..."
+                    value={customOccasion}
+                    onChange={(e) => setCustomOccasion(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (customOccasion.trim()) {
+                          const val = customOccasion.trim();
+                          const current = productForm.occasions || [];
+                          if (!current.includes(val)) {
+                            const updated = [...current, val];
+                            setProductForm({ ...productForm, occasions: updated, occasion: updated[0] });
+                          }
+                          setCustomOccasion('');
+                        }
+                      }
+                    }}
+                    className="flex-1 p-2 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs placeholder-zinc-500 focus:outline-none focus:border-brand-gold"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (customOccasion.trim()) {
+                        const val = customOccasion.trim();
+                        const current = productForm.occasions || [];
+                        if (!current.includes(val)) {
+                          const updated = [...current, val];
+                          setProductForm({ ...productForm, occasions: updated, occasion: updated[0] });
+                        }
+                        setCustomOccasion('');
+                      }
+                    }}
+                    className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-zinc-200 transition"
+                  >
+                    + Añadir
+                  </button>
+                </div>
+
+                {/* List of active custom occasions */}
+                {(productForm.occasions || []).filter((o) => !PRESET_OCCASIONS.includes(o)).length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {(productForm.occasions || [])
+                      .filter((o) => !PRESET_OCCASIONS.includes(o))
+                      .map((occ) => (
+                        <span
+                          key={occ}
+                          className="text-xs px-2.5 py-1 rounded-lg bg-brand-gold/15 text-brand-gold border border-brand-gold/30 flex items-center gap-1.5"
+                        >
+                          <span>{occ}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = (productForm.occasions || []).filter((o) => o !== occ);
+                              setProductForm({ ...productForm, occasions: updated, occasion: updated[0] || 'Todo Momento' });
+                            }}
+                            className="hover:text-red-400"
+                            title="Eliminar"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      ))}
+                  </div>
+                )}
+              </div>
+
+              {/* 2. Perfil de Notas Genérico (Familias Olfativas & Vinculación con Test Olfativo) */}
+              <div className="p-4 rounded-2xl bg-zinc-950/70 border border-brand-gold/30 space-y-3 shadow-md">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                  <div>
+                    <label className="text-white font-semibold text-xs flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
+                      <span>Perfil de Notas Genérico (Vinculado al Test Olfativo)</span>
+                    </label>
+                    <p className="text-[11px] text-zinc-400">
+                      Selecciona los perfiles olfativos que definen el aroma. El <strong>Test Olfativo</strong> recomendará este perfume cuando los clientes elijan notas afines.
+                    </p>
+                  </div>
+                  <span className="text-[10px] text-brand-gold bg-brand-gold/10 px-2.5 py-0.5 rounded-full font-semibold self-start sm:self-auto">
+                    {productForm.families?.length || 0} perfiles seleccionados
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {GENERIC_NOTE_PROFILES.map((profile) => {
+                    const isSelected = (productForm.families || []).includes(profile.id);
+                    return (
+                      <button
+                        key={profile.id}
+                        type="button"
+                        onClick={() => {
+                          const current = (productForm.families || []) as OlfactoryFamily[];
+                          let updated: OlfactoryFamily[];
+                          if (isSelected) {
+                            if (current.length <= 1) return; // al menos 1
+                            updated = current.filter((f) => f !== profile.id);
+                          } else {
+                            updated = [...current, profile.id];
+                          }
+                          setProductForm({ ...productForm, families: updated });
+                        }}
+                        className={`text-left p-3 rounded-xl border transition-all flex items-start justify-between gap-2.5 ${
+                          isSelected
+                            ? 'bg-brand-gold/15 border-brand-gold/60 shadow-sm ring-1 ring-brand-gold/30'
+                            : 'bg-zinc-900/80 border-white/5 hover:border-white/20 hover:bg-zinc-900'
+                        }`}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-base leading-none">{profile.icon}</span>
+                            <span className={`text-xs font-bold ${isSelected ? 'text-brand-gold' : 'text-zinc-200'}`}>
+                              {profile.label}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-zinc-400 mt-1 line-clamp-1">
+                            {profile.notes}
+                          </p>
+                          <span className="inline-block mt-1 text-[9px] text-amber-300 bg-amber-500/10 px-1.5 py-0.5 rounded font-medium">
+                            🎯 {profile.testVibe}
+                          </span>
+                        </div>
+                        <div
+                          className={`w-4 h-4 rounded-md border flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                            isSelected
+                              ? 'bg-brand-gold border-brand-gold text-brand-dark'
+                              : 'border-zinc-700 bg-zinc-800'
+                          }`}
+                        >
+                          {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 3. Estación del Año Ideal */}
+              <div>
+                <label className="block text-zinc-400 mb-1 text-xs font-medium">Estación del Año Ideal</label>
+                <select
+                  value={productForm.season || 'Otoño / Invierno'}
+                  onChange={(e) => setProductForm({ ...productForm, season: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white focus:outline-none focus:border-brand-gold text-xs"
+                >
+                  <option value="Otoño / Invierno">❄️ Otoño / Invierno (Climas Fríos)</option>
+                  <option value="Primavera / Verano">☀️ Primavera / Verano (Climas Cálidos)</option>
+                  <option value="Todo el Año (Versátil)">🌤️ Todo el Año (Versátil)</option>
+                  <option value="Invierno">⛄ Solo Invierno</option>
+                  <option value="Verano">🌴 Solo Verano</option>
+                </select>
               </div>
 
               {/* Longevidad y Estela (Rendimiento) */}

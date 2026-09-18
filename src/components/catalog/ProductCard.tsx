@@ -170,23 +170,56 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
             </div>
           )}
 
-          {/* Ocasión & Estación Badges */}
-          {(fragrance.occasion || fragrance.season) && (
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {fragrance.occasion && (
-                <span className="text-[10px] text-zinc-300 bg-white/5 px-2 py-0.5 rounded-md border border-white/10 flex items-center gap-1 font-medium">
-                  <span>✨</span>
-                  <span>{fragrance.occasion}</span>
-                </span>
-              )}
-              {fragrance.season && (
-                <span className="text-[10px] text-amber-200/90 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20 flex items-center gap-1 font-medium">
-                  <span>🌤️</span>
-                  <span>{fragrance.season}</span>
-                </span>
-              )}
-            </div>
-          )}
+          {/* Ocasión, Estación & Perfil Olfativo Badges */}
+          {(() => {
+            const occasionsList = (Array.isArray(fragrance.occasions) && fragrance.occasions.length > 0)
+              ? fragrance.occasions
+              : fragrance.occasion ? [fragrance.occasion] : [];
+            const mainFamily = fragrance.families?.[0];
+
+            return (
+              <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                {/* Perfil Olfativo Genérico (Vinculado al Test) */}
+                {mainFamily && (
+                  <span className="text-[10px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20 font-medium">
+                    {mainFamily.includes('Gourmand') && '🍯 '}
+                    {mainFamily.includes('Cítrico') && '🍋 '}
+                    {mainFamily.includes('Amaderado') && '🪵 '}
+                    {mainFamily.includes('Oriental') && '🌶️ '}
+                    {mainFamily.includes('Aromático') && '🌿 '}
+                    {mainFamily.includes('Cuero') && '👞 '}
+                    {mainFamily.includes('Acuático') && '🌊 '}
+                    {mainFamily.includes('Floral') && '🌸 '}
+                    {mainFamily}
+                  </span>
+                )}
+
+                {/* Múltiples Ocasiones */}
+                {occasionsList.slice(0, 2).map((occ, idx) => (
+                  <span
+                    key={idx}
+                    className="text-[10px] text-zinc-300 bg-white/5 px-2 py-0.5 rounded-md border border-white/10 flex items-center gap-1 font-medium"
+                  >
+                    <span>✨</span>
+                    <span>{occ}</span>
+                  </span>
+                ))}
+                {occasionsList.length > 2 && (
+                  <span className="text-[9px] text-zinc-400 bg-white/5 px-1.5 py-0.5 rounded-md border border-white/5">
+                    +{occasionsList.length - 2}
+                  </span>
+                )}
+
+                {/* Estación */}
+                {fragrance.season && (
+                  <span className="text-[10px] text-zinc-400 bg-zinc-900 px-2 py-0.5 rounded-md border border-white/5 flex items-center gap-1">
+                    <span>🌤️</span>
+                    <span>{fragrance.season}</span>
+                  </span>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Fragrantica Link (Notas y Acordes) */}
           {fragrance.fragranticaUrl && (

@@ -86,12 +86,17 @@ export const CatalogView: React.FC<CatalogViewProps> = ({ initialCategory = 'all
           const matchName = item.name.toLowerCase().includes(q);
           const matchBrand = item.brand.toLowerCase().includes(q);
           const matchNotes = [
-            ...item.pyramid.top,
-            ...item.pyramid.heart,
-            ...item.pyramid.base,
+            ...(item.pyramid?.top || []),
+            ...(item.pyramid?.heart || []),
+            ...(item.pyramid?.base || []),
           ].some((n) => n.toLowerCase().includes(q));
+          const matchOccasion = [
+            ...(item.occasions || []),
+            item.occasion || '',
+            ...item.families,
+          ].some((o) => o.toLowerCase().includes(q));
           const matchInspired = item.inspiredBy?.toLowerCase().includes(q);
-          if (!matchName && !matchBrand && !matchNotes && !matchInspired) return false;
+          if (!matchName && !matchBrand && !matchNotes && !matchOccasion && !matchInspired) return false;
         }
         return true;
       })

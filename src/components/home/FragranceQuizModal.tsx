@@ -14,6 +14,7 @@ export const FragranceQuizModal: React.FC<QuizProps> = ({ isOpen, onClose }) => 
   const catalog = useStore($catalog);
   const [step, setStep] = useState(1);
   const [occasion, setOccasion] = useState<string>('');
+  const [occasionId, setOccasionId] = useState<string>('');
   const [vibe, setVibe] = useState<string>('');
   const [format, setFormat] = useState<string>('');
   const [addedIds, setAddedIds] = useState<string[]>([]);
@@ -23,20 +24,61 @@ export const FragranceQuizModal: React.FC<QuizProps> = ({ isOpen, onClose }) => 
   const handleReset = () => {
     setStep(1);
     setOccasion('');
+    setOccasionId('');
     setVibe('');
     setFormat('');
     setAddedIds([]);
   };
 
-  // Logic to find recommended fragrances
+  // Algoritmo inteligente que vincula Ocasión + Perfil de Notas Genérico (Familias)
   const getRecommendations = (): Fragrance[] => {
-    return catalog.filter((item) => {
-      if (vibe === 'dulce' && item.families.includes('Gourmand / Dulce')) return true;
-      if (vibe === 'fresco' && item.families.includes('Cítrico / Fresco')) return true;
-      if (vibe === 'amaderado' && item.families.includes('Amaderado')) return true;
-      if (vibe === 'especiado' && item.families.includes('Oriental / Especiado')) return true;
-      return false;
-    }).slice(0, 2);
+    const scored = catalog.map((item) => {
+      let score = 0;
+
+      // 1. Coincidencia con Perfil de Notas Genérico (Familias Olfativas) - Peso: 4 puntos
+      const families = item.families || [];
+      if (vibe === 'dulce') {
+        if (families.some((f) => f.includes('Gourmand') || f.includes('Dulce'))) score += 4;
+      } else if (vibe === 'especiado') {
+        if (families.some((f) => f.includes('Oriental') || f.includes('Especiado') || f.includes('Cuero') || f.includes('Ahumado'))) score += 4;
+      } else if (vibe === 'fresco') {
+        if (families.some((f) => f.includes('Cítrico') || f.includes('Fresco') || f.includes('Aromático') || f.includes('Acuático') || f.includes('Marino'))) score += 4;
+      } else if (vibe === 'amaderado') {
+        if (families.some((f) => f.includes('Amaderado') || f.includes('Cuero') || f.includes('Ahumado'))) score += 4;
+      }
+
+      // 2. Coincidencia con Ocasión de Uso (Soporta múltiples ocasiones) - Peso: 3 puntos
+      const allOccasions = [
+        ...(Array.isArray(item.occasions) ? item.occasions : []),
+        item.occasion || '',
+      ].map((o) => o.toLowerCase());
+
+      if (occasionId === 'noche') {
+        if (allOccasions.some((o) => o.includes('noche') || o.includes('cita') || o.includes('nocturna') || o.includes('seductor'))) score += 3;
+      } else if (occasionId === 'diario') {
+        if (allOccasions.some((o) => o.includes('diario') || o.includes('oficina') || o.includes('casual') || o.includes('firma'))) score += 3;
+      } else if (occasionId === 'fiesta') {
+        if (allOccasions.some((o) => o.includes('fiesta') || o.includes('salidas') || o.includes('nocturna') || o.includes('boliche'))) score += 3;
+      } else if (occasionId === 'gala') {
+        if (allOccasions.some((o) => o.includes('gala') || o.includes('elegante') || o.includes('especial') || o.includes('alta gama'))) score += 3;
+      }
+
+      // 3. Bonificación por Best Seller o Destacado
+      if (item.isBestSeller) score += 0.5;
+      if (item.isFeatured) score += 0.5;
+
+      return { item, score };
+    });
+
+    const matches = scored
+      .filter((s) => s.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((s) => s.item);
+
+    if (matches.length > 0) {
+      return matches.slice(0, 2);
+    }
+    return catalog.slice(0, 2);
   };
 
   const recommended = getRecommendations().length > 0
@@ -56,7 +98,16 @@ export const FragranceQuizModal: React.FC<QuizProps> = ({ isOpen, onClose }) => 
   };
 
   const whatsappQuizLink = () => {
-    const text = `✨ *¡Hola Le Désir!* Hice el Test Olfativo en su tienda y me dio estos resultados:\n• Ocasión: ${occasion}\n• Vibra: ${vibe}\n• Formato: ${format}\nMe recomendó: *${recommended.map((r) => r.name).join(' y ')}*.\n¿Tienen stock y me cuentan un poco más sobre ellos?`;
+    const vibeLabel =
+      vibe === 'dulce'
+        ? 'Dulce / Gourmand (Vainilla & Canela)'
+        : vibe === 'especiado'
+        ? 'Especiado / Oriental (Tabaco & Café)'
+        : vibe === 'fresco'
+        ? 'Cítrico / Fresco (Limpio & Versátil)'
+        : 'Amaderado / Oud (Elegancia & Nobleza)';
+
+    const text = `✨ *¡Hola Le Désir!* Hice el Test Olfativo en su tienda y me dio estos resultados:\n• Ocasión: ${occasion}\n• Perfil de Notas: ${vibeLabel}\n• Formato deseado: ${format}\nMe recomendó: *${recommended.map((r) => r.name).join(' y ')}*.\n¿Tienen stock y me cuentan un poco más sobre ellos?`;
     return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text)}`;
   };
 
@@ -102,6 +153,7 @@ export const FragranceQuizModal: React.FC<QuizProps> = ({ isOpen, onClose }) => 
                 key={opt.id}
                 onClick={() => {
                   setOccasion(opt.label);
+                  setOccasionId(opt.id);
                   setStep(2);
                 }}
                 className="w-full text-left p-3.5 rounded-2xl bg-zinc-950/60 border border-white/5 hover:border-brand-gold/50 hover:bg-brand-gold/5 transition-all flex items-center justify-between group"
@@ -196,6 +248,21 @@ export const FragranceQuizModal: React.FC<QuizProps> = ({ isOpen, onClose }) => 
                           ✨ {item.inspiredBy}
                         </p>
                       )}
+
+                      {/* Match Badges */}
+                      <div className="flex flex-wrap gap-1 mt-1.5">
+                        {item.families?.[0] && (
+                          <span className="text-[9px] font-semibold text-amber-300 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
+                            {item.families[0]}
+                          </span>
+                        )}
+                        {(item.occasions?.[0] || item.occasion) && (
+                          <span className="text-[9px] text-zinc-300 bg-white/5 px-1.5 py-0.5 rounded border border-white/10">
+                            ✨ {item.occasions?.[0] || item.occasion}
+                          </span>
+                        )}
+                      </div>
+
                       <p className="text-[11px] text-zinc-400 mt-1.5 line-clamp-2">
                         {item.description}
                       </p>

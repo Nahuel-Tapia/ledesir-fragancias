@@ -36,7 +36,9 @@ export interface FragranceProps {
   sillage: string;
   gender: 'Unisex' | 'Masculino' | 'Femenino';
   occasion?: string;
+  occasions?: string[];
   season?: string;
+  seasons?: string[];
   isFeatured?: boolean;
   isBestSeller?: boolean;
   isNew?: boolean;

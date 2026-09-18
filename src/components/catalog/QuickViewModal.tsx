@@ -199,33 +199,79 @@ export const QuickViewModal: React.FC = () => {
               {fragrance.description}
             </p>
 
-            {/* Ocasión & Estación de Uso */}
-            {(fragrance.occasion || fragrance.season) && (
-              <div className="grid grid-cols-2 gap-3 mt-4">
-                {fragrance.occasion && (
-                  <div className="p-3 rounded-2xl bg-zinc-950/60 border border-white/5">
-                    <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">
-                      Ocasión Recomendada:
-                    </span>
-                    <span className="text-xs text-white font-medium flex items-center gap-1.5">
-                      <span>✨</span>
-                      <span>{fragrance.occasion}</span>
-                    </span>
-                  </div>
-                )}
-                {fragrance.season && (
-                  <div className="p-3 rounded-2xl bg-zinc-950/60 border border-white/5">
-                    <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-1">
-                      Estación Ideal:
-                    </span>
-                    <span className="text-xs text-brand-gold font-medium flex items-center gap-1.5">
-                      <span>🌤️</span>
-                      <span>{fragrance.season}</span>
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
+            {/* Ocasiones, Estación & Perfil Olfativo Genérico */}
+            {(() => {
+              const occasionsList = (Array.isArray(fragrance.occasions) && fragrance.occasions.length > 0)
+                ? fragrance.occasions
+                : fragrance.occasion ? [fragrance.occasion] : [];
+
+              return (
+                <div className="space-y-2.5 mt-4">
+                  {/* Perfil Olfativo Genérico / Familias */}
+                  {fragrance.families && fragrance.families.length > 0 && (
+                    <div className="p-3 rounded-2xl bg-zinc-950/60 border border-white/5">
+                      <span className="text-[10px] uppercase font-bold text-brand-gold/90 block mb-1.5 tracking-wider">
+                        Perfil de Notas Genérico (Familia Olfativa):
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {fragrance.families.map((fam, idx) => (
+                          <span
+                            key={idx}
+                            className="text-xs px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 font-medium flex items-center gap-1.5"
+                          >
+                            <span>
+                              {fam.includes('Gourmand') && '🍯'}
+                              {fam.includes('Cítrico') && '🍋'}
+                              {fam.includes('Amaderado') && '🪵'}
+                              {fam.includes('Oriental') && '🌶️'}
+                              {fam.includes('Aromático') && '🌿'}
+                              {fam.includes('Cuero') && '👞'}
+                              {fam.includes('Acuático') && '🌊'}
+                              {fam.includes('Floral') && '🌸'}
+                            </span>
+                            <span>{fam}</span>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Ocasiones & Estación */}
+                  {(occasionsList.length > 0 || fragrance.season) && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {occasionsList.length > 0 && (
+                        <div className="p-3 rounded-2xl bg-zinc-950/60 border border-white/5">
+                          <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-1.5">
+                            Ocasiones Recomendadas:
+                          </span>
+                          <div className="flex flex-wrap gap-1">
+                            {occasionsList.map((occ, idx) => (
+                              <span
+                                key={idx}
+                                className="text-[11px] text-zinc-200 bg-white/5 px-2 py-0.5 rounded-md border border-white/10 font-medium"
+                              >
+                                ✨ {occ}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {fragrance.season && (
+                        <div className="p-3 rounded-2xl bg-zinc-950/60 border border-white/5">
+                          <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-1.5">
+                            Estación Ideal:
+                          </span>
+                          <span className="text-xs text-brand-gold font-medium flex items-center gap-1.5">
+                            <span>🌤️</span>
+                            <span>{fragrance.season}</span>
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
             {/* Ficha Técnica y Notas Olfativas en Fragrantica */}
             <div className="mt-4 p-4 rounded-2xl bg-zinc-950/80 border border-brand-gold/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">

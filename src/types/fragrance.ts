@@ -38,8 +38,10 @@ export interface Fragrance {
   longevity: 'Moderada (6-8h)' | 'Larga Duración (8-12h)' | 'Modo Bestia (+12h)' | string;
   sillage: 'Íntima' | 'Moderada' | 'Pesada / Enorme' | string;
   gender: 'Unisex' | 'Masculino' | 'Femenino';
-  occasion?: string; // Ej: Noche / Cita Romántica, Uso Diario, Fiesta, etc.
+  occasion?: string; // Ej: Noche / Cita Romántica (retrocompatibilidad)
+  occasions?: string[]; // Múltiples ocasiones de uso (ej: ['Noche / Cita', 'Fiesta'])
   season?: string;   // Ej: Otoño / Invierno, Primavera / Verano, Todo el año
+  seasons?: string[];
   isFeatured?: boolean;
   isBestSeller?: boolean;
   isNew?: boolean;
