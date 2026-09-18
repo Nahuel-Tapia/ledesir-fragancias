@@ -76,19 +76,38 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     try {
       setIsUploading(true);
 
-      const formData = new FormData();
-      formData.append('file', file);
+      // Read file as Base64 Data URL to send via JSON (100% immune to form CSRF origin blocks)
+      const base64DataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(new Error('No se pudo leer el archivo seleccionado.'));
+        reader.readAsDataURL(file);
+      });
 
       const response = await fetch('/api/upload', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fileData: base64DataUrl,
+          fileName: file.name,
+          fileType: file.type || (isPng ? 'image/png' : 'image/jpeg'),
+          fileSize: file.size,
+        }),
         credentials: 'include',
       });
 
-      const data = await response.json();
+      const responseText = await response.text();
+      let data: any;
+      try {
+        data = JSON.parse(responseText);
+      } catch {
+        throw new Error(responseText || `Error en el servidor (${response.status})`);
+      }
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Error al subir la imagen.');
+        throw new Error(data.error || 'Error al subir la imagen a Supabase.');
       }
 
       onChange(data.url);

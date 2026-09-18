@@ -45,6 +45,7 @@ export interface Fragrance {
   discountPercentage?: number;
   inspiredBy?: string;
   imageFit?: 'cover' | 'contain';
+  fragranticaUrl?: string;
 }
 
 export interface CartItem {

@@ -28,6 +28,7 @@ export const INITIAL_FRAGRANCES: Fragrance[] = [
     stock: 14,
     discountPercentage: 14,
     inspiredBy: "Vibra Angels' Share de Kilian (Coñac, Dátiles & Canela)",
+    fragranticaUrl: 'https://www.fragrantica.es/perfume/Lattafa-Perfumes/Khamrah-75805.html',
   },
   {
     id: 'asad-lattafa',
@@ -56,6 +57,7 @@ export const INITIAL_FRAGRANCES: Fragrance[] = [
     stock: 18,
     discountPercentage: 13,
     inspiredBy: 'Inspirado en la vibra de Sauvage Elixir de Dior',
+    fragranticaUrl: 'https://www.fragrantica.es/perfume/Lattafa-Perfumes/Asad-72821.html',
   },
   {
     id: '9pm-afnan',

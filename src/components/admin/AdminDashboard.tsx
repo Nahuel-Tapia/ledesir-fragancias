@@ -16,6 +16,7 @@ import {
 } from '../../stores/catalogStore';
 import type { Fragrance, BannerSlide } from '../../types/fragrance';
 import { ImageUploader } from './ImageUploader';
+import { BrandSelector } from './BrandSelector';
 import {
   Package,
   Image as ImageIcon,
@@ -88,6 +89,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
     isBestSeller: false,
     isFeatured: true,
     imageFit: 'cover',
+    fragranticaUrl: '',
   });
 
   // Form states for Banner
@@ -183,6 +185,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
       isBestSeller: false,
       isFeatured: true,
       imageFit: 'cover',
+      fragranticaUrl: '',
     });
     setIsCreatingProduct(true);
   };
@@ -700,16 +703,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
                     className="w-full p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white focus:outline-none focus:border-brand-gold"
                   />
                 </div>
-                <div>
-                  <label className="block text-zinc-400 mb-1">Marca / Casa *</label>
-                  <input
-                    type="text"
-                    required
-                    value={productForm.brand || ''}
-                    onChange={(e) => setProductForm({ ...productForm, brand: e.target.value })}
-                    className="w-full p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white focus:outline-none focus:border-brand-gold"
-                  />
-                </div>
+                <BrandSelector
+                  value={productForm.brand || ''}
+                  onChange={(brand) => setProductForm({ ...productForm, brand })}
+                  catalogBrands={catalog.map((c) => c.brand)}
+                />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -759,6 +757,35 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
                   onChange={(e) => setProductForm({ ...productForm, inspiredBy: e.target.value })}
                   className="w-full p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white focus:outline-none focus:border-brand-gold"
                 />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-zinc-400 font-medium text-xs flex items-center gap-1.5">
+                    <ExternalLink className="w-3.5 h-3.5 text-brand-gold" />
+                    <span>Enlace a Fragrantica (Ficha Técnica & Reseñas)</span>
+                  </label>
+                  {productForm.fragranticaUrl && (
+                    <a
+                      href={productForm.fragranticaUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] text-brand-gold hover:underline flex items-center gap-1"
+                    >
+                      Probar enlace ↗
+                    </a>
+                  )}
+                </div>
+                <input
+                  type="url"
+                  placeholder="https://www.fragrantica.es/perfume/... o https://www.fragrantica.com/perfume/..."
+                  value={productForm.fragranticaUrl || ''}
+                  onChange={(e) => setProductForm({ ...productForm, fragranticaUrl: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs focus:outline-none focus:border-brand-gold placeholder-zinc-600"
+                />
+                <p className="text-[10px] text-zinc-500 mt-1">
+                  Permite a los clientes ver las notas detalladas, acordes y votos de la comunidad en Fragrantica desde el catálogo.
+                </p>
               </div>
 
               <div>

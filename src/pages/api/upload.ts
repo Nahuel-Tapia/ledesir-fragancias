@@ -35,11 +35,62 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   try {
     const contentType = request.headers.get('content-type') || '';
-    if (!contentType.includes('multipart/form-data')) {
+    let buffer: Buffer;
+    let fileName = 'image.png';
+    let mimeType = 'image/png';
+    let fileSize = 0;
+
+    if (contentType.includes('application/json')) {
+      // Handled via JSON payload (avoids any browser/proxy form origin restrictions)
+      const body = await request.json();
+      if (!body.fileData || typeof body.fileData !== 'string') {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'No se envió ningún dato de imagen en el campo "fileData".',
+          }),
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+      }
+
+      fileName = body.fileName || 'image.png';
+      mimeType = body.fileType || 'image/png';
+
+      // Remove base64 data URI header if present
+      const base64Clean = body.fileData.replace(/^data:image\/[a-z0-9.+_-]+;base64,/, '');
+      buffer = Buffer.from(base64Clean, 'base64');
+      fileSize = buffer.length;
+    } else if (contentType.includes('multipart/form-data')) {
+      const formData = await request.formData();
+      const file = formData.get('file') as File | null;
+
+      if (!file || !(file instanceof Blob)) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'No se envió ningún archivo válido en el campo "file".',
+          }),
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+      }
+
+      fileName = file.name || 'image.png';
+      mimeType = file.type.toLowerCase() || 'image/png';
+      fileSize = file.size;
+
+      const arrayBuffer = await file.arrayBuffer();
+      buffer = Buffer.from(arrayBuffer);
+    } else {
       return new Response(
         JSON.stringify({
           success: false,
-          error: 'El formato de solicitud debe ser multipart/form-data.',
+          error: 'Content-Type no admitido. Debe ser application/json o multipart/form-data.',
         }),
         {
           status: 400,
@@ -48,27 +99,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       );
     }
 
-    const formData = await request.formData();
-    const file = formData.get('file') as File | null;
-
-    if (!file || !(file instanceof Blob)) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'No se envió ningún archivo válido en el campo "file".',
-        }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    // 2. Validate MIME Type
-    const mimeType = file.type.toLowerCase();
-    const fileName = file.name || 'image.png';
+    // 2. Validate MIME Type & Extension
     const fileExtension = fileName.split('.').pop()?.toLowerCase() || 'png';
-
     const isAllowedMime = ALLOWED_MIME_TYPES.has(mimeType);
     const isAllowedExt = ['png', 'jpg', 'jpeg', 'webp', 'avif', 'gif', 'svg'].includes(fileExtension);
 
@@ -86,11 +118,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
 
     // 3. Validate File Size
-    if (file.size > MAX_FILE_SIZE_BYTES) {
+    if (fileSize > MAX_FILE_SIZE_BYTES) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: `El archivo supera el tamaño máximo de 10 MB (peso actual: ${(file.size / (1024 * 1024)).toFixed(1)} MB).`,
+          error: `El archivo supera el tamaño máximo de 10 MB (peso actual: ${(fileSize / (1024 * 1024)).toFixed(1)} MB).`,
         }),
         {
           status: 400,
@@ -99,10 +131,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       );
     }
 
-    // 4. Convert File into Buffer
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
     // Sanitize filename & unique prefix
     const cleanBaseName = fileName
       .toLowerCase()
@@ -110,7 +138,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       .replace(/-+/g, '-');
     const uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}-${cleanBaseName}`;
 
-    // 5. Upload to Supabase Storage if available
+    // 4. Upload to Supabase Storage if available
     const supabase = getSupabaseClient();
     if (supabase) {
       try {
@@ -131,9 +159,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
               success: true,
               url: publicUrlData.publicUrl,
               fileName: uniqueFileName,
-              originalName: file.name,
+              originalName: fileName,
               mimeType: mimeType || 'image/png',
-              size: file.size,
+              size: fileSize,
               storage: 'supabase',
             }),
             {
@@ -149,7 +177,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       }
     }
 
-    // 6. Fallback: Base64 Data URL (ensures zero downtime / works offline & local mock)
+    // 5. Fallback: Base64 Data URL (ensures zero downtime / works offline & local mock)
     const effectiveMime = mimeType || `image/${fileExtension === 'jpg' ? 'jpeg' : fileExtension}`;
     const base64Data = buffer.toString('base64');
     const dataUrl = `data:${effectiveMime};base64,${base64Data}`;
@@ -159,9 +187,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         success: true,
         url: dataUrl,
         fileName: uniqueFileName,
-        originalName: file.name,
+        originalName: fileName,
         mimeType: effectiveMime,
-        size: file.size,
+        size: fileSize,
         storage: 'base64_fallback',
       }),
       {

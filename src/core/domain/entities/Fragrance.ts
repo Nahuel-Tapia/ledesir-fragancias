@@ -42,6 +42,7 @@ export interface FragranceProps {
   discountPercentage?: number;
   inspiredBy?: string;
   imageFit?: 'cover' | 'contain';
+  fragranticaUrl?: string;
   createdAt?: string;
   updatedAt?: string;
 }

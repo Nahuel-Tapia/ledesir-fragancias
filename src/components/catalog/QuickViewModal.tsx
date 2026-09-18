@@ -3,7 +3,7 @@ import { useStore } from '@nanostores/react';
 import { $quickViewFragrance, closeQuickView } from '../../stores/catalogStore';
 import { addToCart, WHATSAPP_PHONE } from '../../stores/cartStore';
 import type { DecantPrice } from '../../types/fragrance';
-import { X, ShoppingBag, MessageCircle, Clock, Wind, Sparkles } from 'lucide-react';
+import { X, ShoppingBag, MessageCircle, Clock, Wind, Sparkles, ExternalLink } from 'lucide-react';
 
 export const QuickViewModal: React.FC = () => {
   const fragrance = useStore($quickViewFragrance);
@@ -188,12 +188,27 @@ export const QuickViewModal: React.FC = () => {
               <p className="text-xs text-zinc-400 mt-0.5">{fragrance.subtitle}</p>
             )}
 
-            {fragrance.inspiredBy && (
-              <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-medium">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>{fragrance.inspiredBy}</span>
-              </div>
-            )}
+            <div className="mt-2.5 flex flex-wrap items-center gap-2">
+              {fragrance.inspiredBy && (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-medium">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span>{fragrance.inspiredBy}</span>
+                </div>
+              )}
+
+              {fragrance.fragranticaUrl && (
+                <a
+                  href={fragrance.fragranticaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-brand-gold/40 hover:border-brand-gold text-white hover:text-brand-gold text-xs font-medium transition shadow-sm group"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-gold animate-pulse" />
+                  <span>Ficha en <strong className="font-serif italic text-amber-300">Fragrantica</strong></span>
+                  <ExternalLink className="w-3 h-3 text-zinc-400 group-hover:text-brand-gold transition-colors" />
+                </a>
+              )}
+            </div>
 
             <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mt-3">
               {fragrance.description}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import type { Fragrance, DecantPrice } from '../../types/fragrance';
 import { addToCart } from '../../stores/cartStore';
 import { openQuickView } from '../../stores/catalogStore';
-import { ShoppingBag, Eye, Sparkles, Check, Flame } from 'lucide-react';
+import { ShoppingBag, Eye, Sparkles, Check, Flame, ExternalLink } from 'lucide-react';
 
 interface ProductCardProps {
   fragrance: Fragrance;
@@ -99,7 +99,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
         </div>
 
         {/* Quick View Button on Hover */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-[2px] z-10">
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 backdrop-blur-[2px] z-10 p-4">
           <button
             onClick={handleQuickView}
             className="px-4 py-2 rounded-xl bg-zinc-900/90 text-white text-xs font-medium border border-white/20 hover:border-brand-gold hover:text-brand-gold transition-all flex items-center gap-2 shadow-xl transform translate-y-2 group-hover:translate-y-0 duration-300"
@@ -107,6 +107,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
             <Eye className="w-4 h-4" />
             Pirámide Olfativa
           </button>
+          {fragrance.fragranticaUrl && (
+            <a
+              href={fragrance.fragranticaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="px-3 py-1.5 rounded-xl bg-black/80 hover:bg-zinc-900 text-amber-300 text-[11px] font-medium border border-amber-400/40 hover:border-amber-400 transition-all flex items-center gap-1.5 shadow-xl transform translate-y-2 group-hover:translate-y-0 duration-300"
+            >
+              <span>Ficha Fragrantica</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          )}
         </div>
 
         {/* Perfume Category & Gender indicator (Bottom Left) */}
@@ -150,13 +162,30 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
             {fragrance.name}
           </h3>
 
-          {/* Inspiration hint */}
-          {fragrance.inspiredBy && (
-            <div className="mt-1 flex items-center gap-1.5 text-[11px] text-amber-300/90 font-medium line-clamp-1">
-              <Sparkles className="w-3 h-3 text-brand-gold flex-shrink-0" />
-              <span>{fragrance.inspiredBy}</span>
-            </div>
-          )}
+          {/* Inspiration hint & Fragrantica Pill */}
+          <div className="mt-1 flex flex-wrap items-center gap-2">
+            {fragrance.inspiredBy && (
+              <div className="flex items-center gap-1.5 text-[11px] text-amber-300/90 font-medium line-clamp-1">
+                <Sparkles className="w-3 h-3 text-brand-gold flex-shrink-0" />
+                <span>{fragrance.inspiredBy}</span>
+              </div>
+            )}
+
+            {fragrance.fragranticaUrl && (
+              <a
+                href={fragrance.fragranticaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 hover:bg-amber-500/15 border border-white/10 hover:border-amber-400/40 text-[10px] text-zinc-300 hover:text-amber-300 transition-all group/frag"
+                title="Ver ficha técnica y acordes en Fragrantica"
+              >
+                <span className="w-1 h-1 rounded-full bg-amber-400 animate-pulse" />
+                <span className="font-serif italic font-semibold text-amber-300/90">Fragrantica</span>
+                <ExternalLink className="w-2.5 h-2.5 text-zinc-500 group-hover/frag:text-amber-300 transition-colors" />
+              </a>
+            )}
+          </div>
 
           {/* Key olfactory notes summary */}
           <div className="flex flex-wrap gap-1 mt-2.5">

@@ -6,6 +6,9 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   output: 'server',
   adapter: vercel(),
+  security: {
+    checkOrigin: false,
+  },
   integrations: [
     react(),
     tailwind({
