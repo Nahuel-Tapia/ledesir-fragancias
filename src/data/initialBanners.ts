@@ -1,4 +1,4 @@
-﻿import type { BannerSlide, PromoBar, Coupon } from '../types/fragrance';
+import type { BannerSlide, PromoBar, Coupon } from '../types/fragrance';
 
 export const INITIAL_BANNERS: BannerSlide[] = [
   {
@@ -36,12 +36,12 @@ export const INITIAL_BANNERS: BannerSlide[] = [
     subtitle: 'Las creaciones emblemáticas de las casas de perfumería más prestigiosas de París y Milán: Tom Ford, Dior, Chanel e YSL en stock inmediato.',
     badge: '👑 Selecciones Privadas',
     ctaText: 'Ver Colección Diseñador',
-    ctaLink: '/catalogo?categoria=disenador',
+    ctaLink: '/catalogo',
     secondaryCtaText: 'Contactar Asesor',
     secondaryCtaLink: 'https://wa.me/5492645162780?text=Hola!%20Quisiera%20asesoramiento%20sobre%20fragancias',
     bgGradient: 'from-stone-900/50 via-zinc-950/85 to-zinc-950',
     imageUrl: 'https://images.unsplash.com/photo-1615397349754-cfa2066a298e?auto=format&fit=crop&w=1600&q=80',
-    isActive: true,
+    isActive: false,
   },
 ];
 

@@ -78,9 +78,15 @@ export const Navbar: React.FC = () => {
               <span>Árabes</span>
               <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 lowercase">top</span>
             </a>
-            <a href="/catalogo?categoria=disenador" className="hover:text-brand-gold transition-colors">
-              Diseñador
-            </a>
+            <span
+              className="text-zinc-500 cursor-not-allowed flex items-center gap-1.5 select-none"
+              title="Próximamente disponible"
+            >
+              <span>Diseñador</span>
+              <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-zinc-400 font-medium">
+                Próximamente
+              </span>
+            </span>
             <a href="/decants" className="hover:text-brand-gold transition-colors flex items-center gap-1">
               <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
               Decants
@@ -98,14 +104,6 @@ export const Navbar: React.FC = () => {
               <Sparkles className="w-3 h-3" />
               <span>Test Olfativo</span>
             </button>
-
-            <a
-              href="/admin"
-              className="px-2 py-1 rounded border border-white/10 text-zinc-400 hover:text-white hover:border-brand-gold transition-all flex items-center gap-1 text-[10px]"
-            >
-              <ShieldCheck className="w-3 h-3 text-brand-gold" />
-              Admin
-            </a>
           </nav>
 
           {/* Right Action Icons */}
@@ -271,13 +269,12 @@ export const Navbar: React.FC = () => {
                   <span>Perfumes Árabes</span>
                   <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">🔥 Viral</span>
                 </a>
-                <a
-                  href="/catalogo?categoria=disenador"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="py-2.5 px-3 rounded-lg hover:bg-white/5 text-zinc-200 hover:text-brand-gold transition-colors"
-                >
-                  Perfumes de Diseñador
-                </a>
+                <div className="py-2.5 px-3 rounded-lg text-zinc-500 flex items-center justify-between cursor-not-allowed select-none">
+                  <span>Perfumes de Diseñador</span>
+                  <span className="text-[10px] uppercase px-2 py-0.5 rounded bg-white/5 border border-white/10 text-zinc-400 font-medium">
+                    Próximamente
+                  </span>
+                </div>
                 <a
                   href="/decants"
                   onClick={() => setMobileMenuOpen(false)}
@@ -296,21 +293,13 @@ export const Navbar: React.FC = () => {
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
-                    setQuizOpen(true);
+                    openQuiz();
                   }}
                   className="text-left py-2.5 px-3 rounded-lg bg-brand-gold/15 text-brand-gold border border-brand-gold/30 hover:bg-brand-gold hover:text-brand-dark transition-colors flex items-center gap-2"
                 >
                   <Sparkles className="w-4 h-4" />
                   <span>Test Olfativo Exprés</span>
                 </button>
-                <a
-                  href="/admin"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="py-2.5 px-3 rounded-lg bg-white/5 text-zinc-200 hover:text-white transition-colors flex items-center gap-2"
-                >
-                  <ShieldCheck className="w-4 h-4 text-brand-gold" />
-                  Panel Administrador
-                </a>
               </div>
             </div>
 

@@ -61,7 +61,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const cat = params.get('categoria') as FragranceCategory | null;
-      if (cat && ['arabe', 'disenador', 'nicho', 'extra'].includes(cat)) {
+      if (cat && ['arabe', 'extra'].includes(cat)) {
         setSelectedCategory(cat);
       }
       const brandParam = params.get('marca');
@@ -165,10 +165,24 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
         {[
           { id: 'all', label: 'Todas las Fragancias' },
           { id: 'arabe', label: 'Perfumería Árabe 🇦🇪' },
-          { id: 'disenador', label: 'Diseñador & Nicho 🇫🇷' },
+          { id: 'disenador', label: 'Diseñador & Nicho 🇫🇷', badge: 'Próximamente', disabled: true },
           { id: 'extra', label: 'Decants & Accesorios ✨' },
         ].map((tab) => {
           const active = selectedCategory === tab.id;
+          if (tab.disabled) {
+            return (
+              <span
+                key={tab.id}
+                title="Categoría no disponible por el momento (Próximamente)"
+                className="px-4 sm:px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-white/[0.02] text-zinc-500 border border-white/5 cursor-not-allowed flex items-center gap-2 select-none opacity-60"
+              >
+                <span>{tab.label}</span>
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-zinc-400 font-medium">
+                  {tab.badge}
+                </span>
+              </span>
+            );
+          }
           return (
             <button
               key={tab.id}
