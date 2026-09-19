@@ -1,6 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { CatalogView } from '../components/catalog/CatalogView';
+import { getFragrancesUseCase } from '../core/infrastructure/container';
+
+export const prerender = false;
+
+let initialFragrances = [];
+try {
+  const domainFragrances = await getFragrancesUseCase.execute({});
+  if (domainFragrances && domainFragrances.length > 0) {
+    initialFragrances = domainFragrances.map((f) => f.toJSON());
+  }
+} catch (e) {
+  console.error('Error fetching fragrances in SSR catalogo:', e);
+}
 ---
 
 <BaseLayout
@@ -22,6 +35,6 @@ import { CatalogView } from '../components/catalog/CatalogView';
     </div>
 
     <!-- Interactive Filter & Catalog Grid -->
-    <CatalogView client:load />
+    <CatalogView client:load initialFragrances={initialFragrances} />
   </div>
 </BaseLayout>

@@ -1,8 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useStore } from '@nanostores/react';
-import { $catalog } from '../../stores/catalogStore';
+import { $catalog, initCatalogWithServerData, syncCatalogWithBackend } from '../../stores/catalogStore';
+import { INITIAL_FRAGRANCES } from '../../data/initialFragrances';
 import { ProductCard } from './ProductCard';
-import type { FragranceCategory, OlfactoryFamily } from '../../types/fragrance';
+import type { Fragrance, FragranceCategory, OlfactoryFamily } from '../../types/fragrance';
 import { Search, X, Sparkles, SlidersHorizontal, User, Tag } from 'lucide-react';
 
 const FAMILIES: OlfactoryFamily[] = [
@@ -23,10 +24,30 @@ const GENDERS: Array<'all' | 'Unisex' | 'Masculino' | 'Femenino'> = [
 
 interface CatalogViewProps {
   initialCategory?: FragranceCategory | 'all';
+  initialFragrances?: Fragrance[];
 }
 
-export const CatalogView: React.FC<CatalogViewProps> = ({ initialCategory = 'all' }) => {
-  const catalog = useStore($catalog);
+export const CatalogView: React.FC<CatalogViewProps> = ({ 
+  initialCategory = 'all',
+  initialFragrances = [],
+}) => {
+  const storeCatalog = useStore($catalog);
+
+  // In SSR (server) or before store is initialized with real items, prioritize initialFragrances
+  const catalog = (typeof window === 'undefined' && initialFragrances.length > 0)
+    ? initialFragrances
+    : (storeCatalog.length > 0 && storeCatalog !== INITIAL_FRAGRANCES)
+      ? storeCatalog
+      : (initialFragrances.length > 0 ? initialFragrances : storeCatalog);
+
+  // Hydrate store on mount if server provided items, and trigger background sync
+  useEffect(() => {
+    if (initialFragrances.length > 0) {
+      initCatalogWithServerData(initialFragrances);
+    }
+    syncCatalogWithBackend();
+  }, [initialFragrances]);
+
   const [selectedCategory, setSelectedCategory] = useState<FragranceCategory | 'all'>(initialCategory);
   const [selectedBrand, setSelectedBrand] = useState<string>('all');
   const [selectedGender, setSelectedGender] = useState<'all' | 'Unisex' | 'Masculino' | 'Femenino'>('all');

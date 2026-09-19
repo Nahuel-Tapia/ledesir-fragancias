@@ -12,7 +12,11 @@ export const GET: APIRoute = async () => {
       data: banners.map(b => b.toJSON()),
     }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+      },
     });
   } catch (error: any) {
     return new Response(JSON.stringify({

@@ -2,6 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { Fragrance, type FragranceProps, type DecantPrice } from '../../domain/entities/Fragrance';
 import type { IFragranceRepository, FragranceFilters } from '../../domain/repositories/IFragranceRepository';
 import { RepositoryError } from '../../domain/errors/DomainError';
+import { INITIAL_FRAGRANCES } from '../../../data/initialFragrances';
 
 export class SupabaseFragranceRepository implements IFragranceRepository {
   constructor(private readonly supabase: SupabaseClient) {}
@@ -135,10 +136,22 @@ export class SupabaseFragranceRepository implements IFragranceRepository {
           families: p.families,
           description: p.description,
           image: p.image,
-          gallery: p.gallery ?? [],
-          top_notes: p.pyramid.top,
-          heart_notes: p.pyramid.heart,
-          base_notes: p.pyramid.base,
+          gallery: (() => {
+            const metaPayload = JSON.stringify({
+              occasions: p.occasions,
+              occasion: p.occasion,
+              season: p.season,
+              seasons: p.seasons,
+              fragranticaUrl: p.fragranticaUrl,
+              imageFit: p.imageFit,
+            });
+            const clean = (p.gallery || []).filter((g) => typeof g === 'string' && !g.startsWith('__meta__:'));
+            clean.push(`__meta__:${metaPayload}`);
+            return clean;
+          })(),
+          top_notes: p.pyramid?.top ?? [],
+          heart_notes: p.pyramid?.heart ?? [],
+          base_notes: p.pyramid?.base ?? [],
           longevity: p.longevity,
           sillage: p.sillage,
           gender: p.gender,
@@ -198,6 +211,28 @@ export class SupabaseFragranceRepository implements IFragranceRepository {
       if (updates.discountPercentage !== undefined) dbUpdates.discount_percentage = updates.discountPercentage;
       if (updates.inspiredBy !== undefined) dbUpdates.inspired_by = updates.inspiredBy;
 
+      if (
+        updates.occasions !== undefined ||
+        updates.occasion !== undefined ||
+        updates.season !== undefined ||
+        updates.seasons !== undefined ||
+        updates.fragranticaUrl !== undefined ||
+        updates.imageFit !== undefined ||
+        updates.gallery !== undefined
+      ) {
+        const metaPayload = JSON.stringify({
+          occasions: updates.occasions,
+          occasion: updates.occasion,
+          season: updates.season,
+          seasons: updates.seasons,
+          fragranticaUrl: updates.fragranticaUrl,
+          imageFit: updates.imageFit,
+        });
+        const clean = (updates.gallery || []).filter((g) => typeof g === 'string' && !g.startsWith('__meta__:'));
+        clean.push(`__meta__:${metaPayload}`);
+        dbUpdates.gallery = clean;
+      }
+
       const { error } = await this.supabase
         .from('fragrances')
         .update(dbUpdates)
@@ -243,6 +278,44 @@ export class SupabaseFragranceRepository implements IFragranceRepository {
       inStock: Boolean(p.in_stock),
     }));
 
+    // Extract extended metadata (occasions, season, fragranticaUrl, imageFit)
+    let occasions: string[] | undefined = row.occasions;
+    let occasion: string | undefined = row.occasion;
+    let season: string | undefined = row.season;
+    let seasons: string[] | undefined = row.seasons;
+    let fragranticaUrl: string | undefined = row.fragrantica_url;
+    let imageFit: 'cover' | 'contain' | undefined = row.image_fit;
+
+    // Decode from gallery metadata if present: '__meta__:{...}'
+    const rawGallery: string[] = row.gallery || [];
+    const cleanGallery: string[] = [];
+
+    for (const item of rawGallery) {
+      if (typeof item === 'string' && item.startsWith('__meta__:')) {
+        try {
+          const meta = JSON.parse(item.slice(9));
+          if (meta.occasions) occasions = meta.occasions;
+          if (meta.occasion) occasion = meta.occasion;
+          if (meta.season) season = meta.season;
+          if (meta.seasons) seasons = meta.seasons;
+          if (meta.fragranticaUrl) fragranticaUrl = meta.fragranticaUrl;
+          if (meta.imageFit) imageFit = meta.imageFit;
+        } catch (e) {}
+      } else {
+        cleanGallery.push(item);
+      }
+    }
+
+    // Fallback to initialFragrances match if not populated in DB
+    const initialMatch = INITIAL_FRAGRANCES.find((f) => f.id === row.id);
+    if (initialMatch) {
+      if ((!occasions || occasions.length === 0) && initialMatch.occasions) occasions = initialMatch.occasions;
+      if (!occasion && initialMatch.occasion) occasion = initialMatch.occasion;
+      if (!season && initialMatch.season) season = initialMatch.season;
+      if (!fragranticaUrl && initialMatch.fragranticaUrl) fragranticaUrl = initialMatch.fragranticaUrl;
+      if (!imageFit && initialMatch.imageFit) imageFit = initialMatch.imageFit;
+    }
+
     return new Fragrance({
       id: row.id,
       name: row.name,
@@ -252,7 +325,7 @@ export class SupabaseFragranceRepository implements IFragranceRepository {
       families: row.families || [],
       description: row.description,
       image: row.image,
-      gallery: row.gallery || [],
+      gallery: cleanGallery,
       prices: prices.length > 0 ? prices : [
         { size: '100ml', label: 'Frasco Completo 100ml', price: 65000, inStock: row.stock > 0 }
       ],
@@ -261,9 +334,15 @@ export class SupabaseFragranceRepository implements IFragranceRepository {
         heart: row.heart_notes || [],
         base: row.base_notes || [],
       },
-      longevity: row.longevity || 'Larga Duración',
+      longevity: row.longevity || 'Larga Duración (8-12h)',
       sillage: row.sillage || 'Moderada',
       gender: row.gender || 'Unisex',
+      occasion: occasion || occasions?.[0],
+      occasions: occasions || (occasion ? [occasion] : []),
+      season: season || 'Todo el Año',
+      seasons,
+      fragranticaUrl,
+      imageFit: imageFit || (row.image?.toLowerCase().endsWith('.png') ? 'contain' : 'cover'),
       isFeatured: Boolean(row.is_featured),
       isBestSeller: Boolean(row.is_best_seller),
       isNew: Boolean(row.is_new),

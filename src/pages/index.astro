@@ -5,12 +5,39 @@ import CategoryBento from '../components/home/CategoryBento.astro';
 import DecantExplainer from '../components/home/DecantExplainer.astro';
 import InstagramFeed from '../components/home/InstagramFeed.astro';
 import { ProductCard } from '../components/catalog/ProductCard';
+import { getFragrancesUseCase, getBannersUseCase } from '../core/infrastructure/container';
 import { INITIAL_FRAGRANCES } from '../data/initialFragrances';
+import { INITIAL_BANNERS } from '../data/initialBanners';
 import { Flame, ArrowRight, Sparkles } from 'lucide-react';
 
-const featuredFragrances = INITIAL_FRAGRANCES.filter(
+export const prerender = false;
+
+let allFragrances = INITIAL_FRAGRANCES;
+try {
+  const domainFragrances = await getFragrancesUseCase.execute({});
+  if (domainFragrances && domainFragrances.length > 0) {
+    allFragrances = domainFragrances.map((f) => f.toJSON());
+  }
+} catch (e) {
+  console.error('Error fetching fragrances in SSR index:', e);
+}
+
+const featuredFragrances = allFragrances.filter(
   (f) => f.isFeatured || f.isBestSeller
-).slice(0, 4);
+);
+const displayedFeatured = featuredFragrances.length > 0
+  ? featuredFragrances.slice(0, 4)
+  : allFragrances.slice(0, 4);
+
+let initialBanners = INITIAL_BANNERS;
+try {
+  const domainBanners = await getBannersUseCase.execute();
+  if (domainBanners && domainBanners.length > 0) {
+    initialBanners = domainBanners.map((b) => b.toJSON());
+  }
+} catch (e) {
+  console.error('Error fetching banners in SSR index:', e);
+}
 ---
 
 <BaseLayout
@@ -18,7 +45,7 @@ const featuredFragrances = INITIAL_FRAGRANCES.filter(
   description="Descubre los mejores perfumes árabes (Lattafa, Afnan, Armaf) y fragancias de diseñador en frasco completo y decants exclusivos de 5ml y 10ml."
 >
   <!-- Hero Carousel Slider (Managed dynamically from Admin) -->
-  <HeroCarousel client:load />
+  <HeroCarousel client:load initialBanners={initialBanners} />
 
   <!-- Bento Grid of Collections -->
   <CategoryBento />
@@ -43,14 +70,14 @@ const featuredFragrances = INITIAL_FRAGRANCES.filter(
         href="/catalogo"
         class="inline-flex items-center gap-2 text-xs font-bold text-brand-gold uppercase tracking-wider hover:text-brand-gold-light transition group"
       >
-        <span>Ver catálogo completo ({INITIAL_FRAGRANCES.length})</span>
+        <span>Ver catálogo completo ({allFragrances.length})</span>
         <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
       </a>
     </div>
 
     <!-- 4 Featured Product Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {featuredFragrances.map((fragrance) => (
+      {displayedFeatured.map((fragrance) => (
         <ProductCard client:load fragrance={fragrance} />
       ))}
     </div>

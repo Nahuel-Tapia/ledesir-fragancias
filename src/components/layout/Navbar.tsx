@@ -30,10 +30,10 @@ export const Navbar: React.FC = () => {
         const matchesName = item.name.toLowerCase().includes(q);
         const matchesBrand = item.brand.toLowerCase().includes(q);
         const matchesNotes = [
-          ...item.pyramid.top,
-          ...item.pyramid.heart,
-          ...item.pyramid.base,
-          ...item.families,
+          ...(item.pyramid?.top || []),
+          ...(item.pyramid?.heart || []),
+          ...(item.pyramid?.base || []),
+          ...(item.families || []),
         ].some((note) => note.toLowerCase().includes(q));
         const matchesInspiration = item.inspiredBy?.toLowerCase().includes(q);
         return matchesName || matchesBrand || matchesNotes || matchesInspiration;

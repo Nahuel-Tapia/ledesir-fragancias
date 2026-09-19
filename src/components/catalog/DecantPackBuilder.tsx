@@ -1,13 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore } from '@nanostores/react';
-import { $catalog } from '../../stores/catalogStore';
+import { $catalog, initCatalogWithServerData } from '../../stores/catalogStore';
+import { INITIAL_FRAGRANCES } from '../../data/initialFragrances';
 import { addToCart } from '../../stores/cartStore';
 import type { Fragrance } from '../../types/fragrance';
 import { Check, Sparkles, ShoppingBag, Plus, X, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-export const DecantPackBuilder: React.FC = () => {
-  const catalog = useStore($catalog);
+interface DecantPackBuilderProps {
+  initialFragrances?: Fragrance[];
+}
+
+export const DecantPackBuilder: React.FC<DecantPackBuilderProps> = ({ initialFragrances = [] }) => {
+  const storeCatalog = useStore($catalog);
+  const catalog = (typeof window === 'undefined' && initialFragrances.length > 0)
+    ? initialFragrances
+    : (storeCatalog.length > 0 && storeCatalog !== INITIAL_FRAGRANCES)
+      ? storeCatalog
+      : (initialFragrances.length > 0 ? initialFragrances : storeCatalog);
+
+  useEffect(() => {
+    if (initialFragrances.length > 0) {
+      initCatalogWithServerData(initialFragrances);
+    }
+  }, [initialFragrances]);
+
   const [packSize, setPackSize] = useState<'5ml' | '10ml'>('5ml');
   const [selectedFragrances, setSelectedFragrances] = useState<Fragrance[]>([]);
   const [isAdded, setIsAdded] = useState(false);

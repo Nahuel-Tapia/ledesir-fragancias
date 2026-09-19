@@ -12,6 +12,7 @@ import {
   deleteBanner,
   toggleBannerActive,
   syncCatalogWithBackend,
+  syncBannersWithBackend,
   $isSyncing,
 } from '../../stores/catalogStore';
 import type { Fragrance, BannerSlide, OlfactoryFamily } from '../../types/fragrance';
@@ -155,6 +156,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
       .catch(() => {});
 
     loadOrders();
+    syncCatalogWithBackend();
+    syncBannersWithBackend();
   }, []);
 
   const loadOrders = async () => {

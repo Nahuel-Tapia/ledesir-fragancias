@@ -45,20 +45,60 @@ export const $isQuizOpen = atom<boolean>(false);
 // LocalStorage Persistence
 if (typeof window !== 'undefined') {
   $catalog.subscribe((items) => {
-    localStorage.setItem(FRAGRANCES_KEY, JSON.stringify(items));
+    try {
+      localStorage.setItem(FRAGRANCES_KEY, JSON.stringify(items));
+    } catch (e) {
+      console.error('Error persisting catalog', e);
+    }
   });
 
   $banners.subscribe((items) => {
-    localStorage.setItem(BANNERS_KEY, JSON.stringify(items));
+    try {
+      localStorage.setItem(BANNERS_KEY, JSON.stringify(items));
+    } catch (e) {
+      console.error('Error persisting banners', e);
+    }
   });
 }
 
-// Background API Synchronization
+// Hydrate store from SSR data
+export const initCatalogWithServerData = (items: Fragrance[]) => {
+  if (Array.isArray(items) && items.length > 0) {
+    $catalog.set(items);
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(FRAGRANCES_KEY, JSON.stringify(items));
+      } catch (e) {
+        console.error('Error saving catalog to localStorage', e);
+      }
+    }
+  }
+};
+
+export const initBannersWithServerData = (banners: BannerSlide[]) => {
+  if (Array.isArray(banners) && banners.length > 0) {
+    $banners.set(banners);
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(BANNERS_KEY, JSON.stringify(banners));
+      } catch (e) {
+        console.error('Error saving banners to localStorage', e);
+      }
+    }
+  }
+};
+
+// Background API Synchronization (Cache-busting enabled)
 export const syncCatalogWithBackend = async () => {
   if (typeof window === 'undefined') return;
   try {
     $isSyncing.set(true);
-    const res = await fetch('/api/fragrances');
+    const res = await fetch(`/api/fragrances?t=${Date.now()}`, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+      },
+    });
     if (res.ok) {
       const data = await res.json();
       if (data.success && Array.isArray(data.data) && data.data.length > 0) {
@@ -71,6 +111,32 @@ export const syncCatalogWithBackend = async () => {
     $isSyncing.set(false);
   }
 };
+
+export const syncBannersWithBackend = async () => {
+  if (typeof window === 'undefined') return;
+  try {
+    const res = await fetch(`/api/banners?t=${Date.now()}`, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+      },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+        $banners.set(data.data);
+      }
+    }
+  } catch (err) {
+    console.warn('API banner sync fallback mode', err);
+  }
+};
+
+// Automatic background sync whenever loaded in browser
+if (typeof window !== 'undefined') {
+  syncCatalogWithBackend();
+  syncBannersWithBackend();
+}
 
 // Fragrance Actions (Optimistic + Backend Sync)
 export const addFragrance = async (fragrance: Fragrance) => {
@@ -135,20 +201,46 @@ export const addBanner = async (banner: BannerSlide) => {
   }
 };
 
-export const updateBanner = (id: string, updated: Partial<BannerSlide>) => {
+export const updateBanner = async (id: string, updated: Partial<BannerSlide>) => {
+  const currentList = $banners.get();
+  const currentItem = currentList.find((b) => b.id === id);
+  if (!currentItem) return;
+  const mergedBanner = { ...currentItem, ...updated };
   $banners.set(
-    $banners.get().map((item) => (item.id === id ? { ...item, ...updated } : item))
+    currentList.map((item) => (item.id === id ? mergedBanner : item))
   );
+  try {
+    await fetch('/api/banners', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(mergedBanner),
+    });
+  } catch (err) {
+    console.warn('Backend banner update sync failed, saved locally', err);
+  }
 };
 
 export const deleteBanner = (id: string) => {
   $banners.set($banners.get().filter((item) => item.id !== id));
 };
 
-export const toggleBannerActive = (id: string) => {
+export const toggleBannerActive = async (id: string) => {
+  const currentList = $banners.get();
+  const currentItem = currentList.find((b) => b.id === id);
+  if (!currentItem) return;
+  const mergedBanner = { ...currentItem, isActive: !currentItem.isActive };
   $banners.set(
-    $banners.get().map((item) => (item.id === id ? { ...item, isActive: !item.isActive } : item))
+    currentList.map((item) => (item.id === id ? mergedBanner : item))
   );
+  try {
+    await fetch('/api/banners', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(mergedBanner),
+    });
+  } catch (err) {
+    console.warn('Backend banner toggle sync failed, saved locally', err);
+  }
 };
 
 // Quick View Actions

@@ -20,7 +20,11 @@ export const GET: APIRoute = async ({ params }) => {
       data: fragrance.toJSON(),
     }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+      },
     });
   } catch (error: any) {
     const isNotFound = error.code === 'ENTITY_NOT_FOUND';

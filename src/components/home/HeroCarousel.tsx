@@ -1,12 +1,33 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore } from '@nanostores/react';
-import { $banners } from '../../stores/catalogStore';
+import { $banners, initBannersWithServerData, syncBannersWithBackend } from '../../stores/catalogStore';
+import { INITIAL_BANNERS } from '../../data/initialBanners';
+import type { BannerSlide } from '../../types/fragrance';
 import { ChevronLeft, ChevronRight, Sparkles, ArrowRight } from 'lucide-react';
 
-export const HeroCarousel: React.FC = () => {
-  const allBanners = useStore($banners);
+interface HeroCarouselProps {
+  initialBanners?: BannerSlide[];
+}
+
+export const HeroCarousel: React.FC<HeroCarouselProps> = ({ initialBanners = [] }) => {
+  const storeBanners = useStore($banners);
+
+  // In SSR or before store hydration, prioritize initialBanners
+  const allBanners = (typeof window === 'undefined' && initialBanners.length > 0)
+    ? initialBanners
+    : (storeBanners.length > 0 && storeBanners !== INITIAL_BANNERS)
+      ? storeBanners
+      : (initialBanners.length > 0 ? initialBanners : storeBanners);
+
   const activeBanners = allBanners.filter((b) => b.isActive);
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    if (initialBanners.length > 0) {
+      initBannersWithServerData(initialBanners);
+    }
+    syncBannersWithBackend();
+  }, [initialBanners]);
 
   useEffect(() => {
     if (activeBanners.length <= 1) return;
