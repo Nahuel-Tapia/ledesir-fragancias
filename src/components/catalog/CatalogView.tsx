@@ -159,9 +159,9 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   };
 
   return (
-    <div className="space-y-8">
-      {/* Category Nav Tabs */}
-      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+    <div className="space-y-6 sm:space-y-8">
+      {/* Category Nav Tabs with smooth horizontal touch scroll on mobile */}
+      <div className="flex overflow-x-auto no-scrollbar sm:flex-wrap items-center sm:justify-center gap-2 sm:gap-3 pb-1.5 -mx-4 px-4 sm:mx-0 sm:px-0">
         {[
           { id: 'all', label: 'Todas las Fragancias' },
           { id: 'arabe', label: 'Perfumería Árabe 🇦🇪' },
@@ -174,7 +174,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
               <span
                 key={tab.id}
                 title="Categoría no disponible por el momento (Próximamente)"
-                className="px-4 sm:px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-white/[0.02] text-zinc-500 border border-white/5 cursor-not-allowed flex items-center gap-2 select-none opacity-60"
+                className="whitespace-nowrap flex-shrink-0 px-3.5 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-white/[0.02] text-zinc-500 border border-white/5 cursor-not-allowed flex items-center gap-2 select-none opacity-60"
               >
                 <span>{tab.label}</span>
                 <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-zinc-400 font-medium">
@@ -187,9 +187,9 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
             <button
               key={tab.id}
               onClick={() => setSelectedCategory(tab.id as any)}
-              className={`px-4 sm:px-6 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-200 ${
+              className={`whitespace-nowrap flex-shrink-0 px-3.5 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-200 ${
                 active
-                  ? 'bg-brand-gold text-brand-dark shadow-lg shadow-brand-gold/20'
+                  ? 'bg-brand-gold text-brand-dark shadow-lg shadow-brand-gold/20 font-bold'
                   : 'bg-white/5 text-zinc-300 hover:text-white hover:bg-white/10 border border-white/10'
               }`}
             >
@@ -200,9 +200,9 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       </div>
 
       {/* Main Filter & Search Control Panel */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-brand-surface border border-white/10 shadow-xl space-y-4">
+      <div className="p-3.5 sm:p-5 rounded-2xl bg-brand-surface border border-white/10 shadow-xl space-y-3 sm:space-y-4">
         {/* Top Row: Search + Mobile Filter Toggle + Sorting */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3">
           {/* Search Input */}
           <div className="relative w-full sm:w-80">
             <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -210,13 +210,13 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar por perfume, nota o inspiración..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-zinc-900/90 border border-white/10 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-gold transition"
+              placeholder="Buscar perfume, notas o inspiración..."
+              className="w-full pl-10 pr-9 py-2 sm:py-2.5 rounded-xl bg-zinc-900/90 border border-white/10 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-gold transition"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-white"
                 aria-label="Limpiar búsqueda"
               >
                 <X className="w-3.5 h-3.5" />
@@ -224,11 +224,11 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
             )}
           </div>
 
-          <div className="flex items-center justify-between sm:justify-end gap-2.5 w-full sm:w-auto">
-            {/* Toggle Advanced Filters Button (Mobile & Desktop) */}
+          <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
+            {/* Toggle Advanced Filters Button */}
             <button
               onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-              className={`px-3.5 py-2.5 rounded-xl border text-xs font-semibold flex items-center gap-2 transition ${
+              className={`flex-1 sm:flex-none justify-center px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 sm:gap-2 transition ${
                 showAdvancedFilters || hasActiveFilters
                   ? 'bg-brand-gold/15 text-brand-gold border-brand-gold/40'
                   : 'bg-zinc-900/80 text-zinc-300 border-white/10 hover:border-white/20'
@@ -244,11 +244,11 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
             </button>
 
             {/* Sort Selector */}
-            <div className="flex items-center gap-2">
+            <div className="flex-1 sm:flex-none">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-3 py-2.5 rounded-xl bg-zinc-900/90 border border-white/10 text-xs text-zinc-200 focus:outline-none focus:border-brand-gold cursor-pointer"
+                className="w-full px-2.5 sm:px-3 py-2 sm:py-2.5 rounded-xl bg-zinc-900/90 border border-white/10 text-xs text-zinc-200 focus:outline-none focus:border-brand-gold cursor-pointer"
               >
                 <option value="featured">Destacados & Bestsellers</option>
                 <option value="price-asc">Precio: Menor a Mayor</option>
@@ -259,15 +259,15 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           </div>
         </div>
 
-        {/* Filter Panel (Collapsible / Expandable with Brand & Gender) */}
+        {/* Filter Panel (Collapsible / Expandable with Brand, Gender & Family) */}
         <div
-          className={`grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-white/5 transition-all duration-300 ${
+          className={`grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 pt-3 border-t border-white/5 transition-all duration-300 ${
             showAdvancedFilters ? 'block' : 'hidden sm:grid'
           }`}
         >
           {/* Brand Filter */}
           <div>
-            <label className="text-[11px] font-medium text-zinc-400 block mb-1.5 flex items-center gap-1.5">
+            <label className="text-[11px] font-medium text-zinc-400 block mb-1 flex items-center gap-1.5">
               <Tag className="w-3 h-3 text-brand-gold" />
               <span>Filtrar por Marca:</span>
             </label>
@@ -287,7 +287,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
 
           {/* Gender Filter */}
           <div>
-            <label className="text-[11px] font-medium text-zinc-400 block mb-1.5 flex items-center gap-1.5">
+            <label className="text-[11px] font-medium text-zinc-400 block mb-1 flex items-center gap-1.5">
               <User className="w-3 h-3 text-brand-gold" />
               <span>Género / Estilo:</span>
             </label>
@@ -305,7 +305,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
 
           {/* Olfactory Family Filter */}
           <div>
-            <label className="text-[11px] font-medium text-zinc-400 block mb-1.5 flex items-center gap-1.5">
+            <label className="text-[11px] font-medium text-zinc-400 block mb-1 flex items-center gap-1.5">
               <Sparkles className="w-3 h-3 text-brand-gold" />
               <span>Familia Olfativa:</span>
             </label>
@@ -326,14 +326,14 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       </div>
 
       {/* Active Filter Chips & Counter */}
-      <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-zinc-400 font-medium">
+      <div className="flex flex-wrap items-center justify-between gap-2.5 text-xs">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          <span className="text-zinc-400 font-medium text-[11px] sm:text-xs">
             Mostrando <strong className="text-white">{filteredItems.length}</strong> de {catalog.length} fragancias
           </span>
 
           {hasActiveFilters && (
-            <div className="flex flex-wrap items-center gap-1.5 ml-2">
+            <div className="flex flex-wrap items-center gap-1.5">
               {selectedCategory !== 'all' && (
                 <span className="px-2.5 py-0.5 rounded-full bg-brand-gold/15 text-brand-gold border border-brand-gold/30 flex items-center gap-1 text-[11px]">
                   Categoría: {selectedCategory}
@@ -374,14 +374,14 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
             className="text-xs text-brand-gold hover:text-brand-gold-light underline flex items-center gap-1 font-semibold"
           >
             <X className="w-3.5 h-3.5" />
-            Limpiar todos los filtros
+            Limpiar filtros
           </button>
         )}
       </div>
 
-      {/* Products Grid */}
+      {/* Products Grid: 2 columns on mobile, 2 on sm, 3 on lg, 4 on xl */}
       {filteredItems.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-6">
           {filteredItems.map((fragrance) => (
             <ProductCard key={fragrance.id} fragrance={fragrance} />
           ))}

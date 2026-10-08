@@ -82,17 +82,17 @@ export const QuickViewModal: React.FC = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
       onClick={closeQuickView}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl bg-brand-surface border border-white/15 p-6 sm:p-8 shadow-2xl flex flex-col md:flex-row gap-6 md:gap-8"
+        className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-2xl sm:rounded-3xl bg-brand-surface border border-white/15 p-4 sm:p-6 md:p-8 shadow-2xl flex flex-col md:flex-row gap-5 md:gap-8"
       >
         {/* Close Button */}
         <button
           onClick={closeQuickView}
-          className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition z-20"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 p-2 rounded-full bg-black/60 sm:bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white transition z-30"
           aria-label="Cerrar modal"
         >
           <X className="w-5 h-5" />
@@ -100,12 +100,12 @@ export const QuickViewModal: React.FC = () => {
 
         {/* Left Column: Image */}
         <div className="w-full md:w-1/2 flex flex-col items-center">
-          <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-gradient-to-b from-zinc-800/90 via-zinc-900 to-zinc-950 border border-white/10 shadow-luxury flex items-center justify-center">
+          <div className="relative w-full aspect-[4/3] sm:aspect-[4/5] max-h-56 sm:max-h-80 md:max-h-none rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-b from-zinc-800/90 via-zinc-900 to-zinc-950 border border-white/10 shadow-luxury flex items-center justify-center">
             <img
               src={fragrance.image}
               alt={fragrance.name}
               className={`w-full h-full ${
-                isContainFit ? 'object-contain p-6' : 'object-cover'
+                isContainFit ? 'object-contain p-4 sm:p-6' : 'object-cover'
               } object-center relative z-0`}
             />
 
@@ -367,13 +367,13 @@ export const QuickViewModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Action CTAs */}
-          <div className="mt-6 pt-4 border-t border-white/10 flex flex-col sm:flex-row gap-3">
+          {/* Action CTAs - Sticky bottom on mobile so user never has to scroll to buy */}
+          <div className="mt-5 sm:mt-6 pt-3 sm:pt-4 border-t border-white/10 flex flex-col sm:flex-row gap-2.5 sm:gap-3 sticky bottom-0 bg-brand-surface/95 backdrop-blur-md -mx-4 -mb-4 p-4 sm:p-0 sm:m-0 sm:static sm:bg-transparent z-20">
             <button
               onClick={handleAddToCart}
-              className={`flex-1 py-3 px-4 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all ${
+              className={`flex-1 py-3 px-4 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
                 isAdded
-                  ? 'bg-emerald-600 text-white'
+                  ? 'bg-emerald-600 text-white shadow-emerald-600/30'
                   : 'bg-brand-gold hover:bg-brand-gold-light text-brand-dark shadow-lg shadow-brand-gold/20'
               }`}
             >
@@ -385,7 +385,7 @@ export const QuickViewModal: React.FC = () => {
               href={`https://wa.me/${WHATSAPP_PHONE}?text=${whatsappDirectMsg}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="py-3 px-4 rounded-xl border border-emerald-500/40 bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 text-xs font-semibold flex items-center justify-center gap-2 transition"
+              className="py-2.5 sm:py-3 px-4 rounded-xl border border-emerald-500/40 bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 text-xs font-semibold flex items-center justify-center gap-2 transition active:scale-[0.98]"
             >
               <MessageCircle className="w-4 h-4" />
               Pedir directo

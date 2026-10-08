@@ -118,15 +118,15 @@ export const CartDrawer: React.FC = () => {
         onClick={closeCart}
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
         <div className="w-screen max-w-md bg-brand-surface border-l border-white/10 shadow-2xl flex flex-col justify-between animate-slide-left">
           {/* Header */}
-          <div className="p-5 sm:p-6 border-b border-white/10 flex items-center justify-between">
+          <div className="p-4 sm:p-6 border-b border-white/10 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <h2 className="font-editorial text-xl sm:text-2xl font-bold text-white tracking-wide">
+              <h2 className="font-editorial text-lg sm:text-2xl font-bold text-white tracking-wide">
                 Tu Carrito Le Désir
               </h2>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-brand-gold/15 text-brand-gold font-semibold">
+              <span className="text-[11px] sm:text-xs px-2 py-0.5 rounded-full bg-brand-gold/15 text-brand-gold font-semibold">
                 {items.length} {items.length === 1 ? 'producto' : 'productos'}
               </span>
             </div>
@@ -141,7 +141,7 @@ export const CartDrawer: React.FC = () => {
           </div>
 
           {/* Free Shipping Progress Bar */}
-          <div className="px-5 sm:px-6 py-3 bg-zinc-950/60 border-b border-white/5 text-xs">
+          <div className="px-4 sm:px-6 py-2.5 sm:py-3 bg-zinc-950/60 border-b border-white/5 text-xs">
             {freeShipping.isFree ? (
               <p className="text-emerald-400 font-semibold flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4" />
@@ -214,21 +214,23 @@ export const CartDrawer: React.FC = () => {
 
                     <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
                       {/* Quantity selector */}
-                      <div className="flex items-center gap-2 bg-zinc-900 px-2 py-0.5 rounded-lg border border-white/10">
+                      <div className="flex items-center gap-1.5 sm:gap-2 bg-zinc-900 px-2 py-1 rounded-lg border border-white/10">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="text-zinc-400 hover:text-white p-0.5"
+                          className="text-zinc-400 hover:text-white p-1 rounded hover:bg-white/5 active:scale-90 transition"
+                          aria-label="Disminuir cantidad"
                         >
-                          <Minus className="w-3 h-3" />
+                          <Minus className="w-3.5 h-3.5" />
                         </button>
-                        <span className="text-xs font-semibold text-white min-w-[14px] text-center">
+                        <span className="text-xs font-semibold text-white min-w-[18px] text-center">
                           {item.quantity}
                         </span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="text-zinc-400 hover:text-white p-0.5"
+                          className="text-zinc-400 hover:text-white p-1 rounded hover:bg-white/5 active:scale-90 transition"
+                          aria-label="Aumentar cantidad"
                         >
-                          <Plus className="w-3 h-3" />
+                          <Plus className="w-3.5 h-3.5" />
                         </button>
                       </div>
 
@@ -244,7 +246,7 @@ export const CartDrawer: React.FC = () => {
 
           {/* Footer & Checkout Area */}
           {items.length > 0 && (
-            <div className="p-5 sm:p-6 bg-zinc-950/90 border-t border-white/10 space-y-3.5 max-h-[58vh] overflow-y-auto">
+            <div className="p-4 sm:p-6 bg-zinc-950/90 border-t border-white/10 space-y-3 sm:space-y-3.5 max-h-[58vh] overflow-y-auto">
               {/* Total Savings Banner if any discount applied */}
               {discount > 0 && (
                 <div className="p-2.5 rounded-xl bg-gradient-to-r from-emerald-950/60 via-brand-surface to-emerald-950/60 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between shadow-sm">

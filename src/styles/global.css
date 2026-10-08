@@ -64,3 +64,12 @@
   border: 1px solid rgba(197, 160, 89, 0.3);
   box-shadow: 0 0 15px -3px rgba(197, 160, 89, 0.15);
 }
+
+/* Ocultar barra de scroll en contenedores horizontales en mobile */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

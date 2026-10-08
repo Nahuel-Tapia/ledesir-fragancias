@@ -41,7 +41,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ initialBanners = [] 
   const slide = activeBanners[currentSlide];
 
   return (
-    <section className="relative overflow-hidden bg-brand-dark min-h-[560px] sm:min-h-[640px] flex items-center justify-center border-b border-white/5">
+    <section className="relative overflow-hidden bg-brand-dark min-h-[460px] sm:min-h-[640px] flex items-center justify-center border-b border-white/5">
       {/* Background Image with Ambient Luxury Overlay */}
       {slide.imageUrl && (
         <div className="absolute inset-0 z-0">
@@ -56,17 +56,17 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ initialBanners = [] 
       )}
 
       {/* Slide Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 py-20 text-center flex flex-col items-center">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20 text-center flex flex-col items-center">
         {/* Pill Badge */}
         {slide.badge && (
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-brand-gold/30 bg-brand-gold/10 text-brand-gold-light text-xs font-semibold tracking-wider mb-6 backdrop-blur-md shadow-lg">
-            <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 rounded-full border border-brand-gold/30 bg-brand-gold/10 text-brand-gold-light text-[11px] sm:text-xs font-semibold tracking-wider mb-4 sm:mb-6 backdrop-blur-md shadow-lg">
+            <Sparkles className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-brand-gold" />
             <span>{slide.badge}</span>
           </div>
         )}
 
         {/* Main Editorial Headline */}
-        <h1 className="font-editorial text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-tight leading-[1.1] max-w-4xl">
+        <h1 className="font-editorial text-3xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-tight leading-[1.15] sm:leading-[1.1] max-w-4xl">
           {slide.title} <br />
           {slide.titleAccent && (
             <span className="gold-gradient-text italic font-normal">
@@ -76,15 +76,15 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ initialBanners = [] 
         </h1>
 
         {/* Subtitle */}
-        <p className="mt-6 text-sm sm:text-base md:text-lg text-zinc-300 max-w-2xl mx-auto font-light leading-relaxed">
+        <p className="mt-4 sm:mt-6 text-xs sm:text-base md:text-lg text-zinc-300 max-w-2xl mx-auto font-light leading-relaxed">
           {slide.subtitle}
         </p>
 
         {/* Action Buttons */}
-        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+        <div className="mt-6 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto">
           <a
             href={slide.ctaLink}
-            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-brand-gold hover:bg-brand-gold-light text-brand-dark font-bold text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-lg shadow-brand-gold/25 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
+            className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl bg-brand-gold hover:bg-brand-gold-light text-brand-dark font-bold text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-lg shadow-brand-gold/25 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
           >
             <span>{slide.ctaText}</span>
             <ArrowRight className="w-4 h-4" />
@@ -93,7 +93,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ initialBanners = [] 
           {slide.secondaryCtaText && slide.secondaryCtaLink && (
             <a
               href={slide.secondaryCtaLink}
-              className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-200 border border-white/15 text-xs font-semibold tracking-wider uppercase backdrop-blur-md hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
+              className="w-full sm:w-auto px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-200 border border-white/15 text-xs font-semibold tracking-wider uppercase backdrop-blur-md hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
             >
               {slide.secondaryCtaText}
             </a>
@@ -102,7 +102,7 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ initialBanners = [] 
 
         {/* Dot Pagination */}
         {activeBanners.length > 1 && (
-          <div className="mt-12 flex items-center gap-2">
+          <div className="mt-8 sm:mt-12 flex items-center gap-2">
             {activeBanners.map((_, idx) => (
               <button
                 key={idx}
