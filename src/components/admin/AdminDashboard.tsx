@@ -105,7 +105,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
     prices: [
       { size: '5ml', label: 'Decant 5ml', price: 7500, inStock: true },
       { size: '10ml', label: 'Decant 10ml', price: 13500, inStock: true },
-      { size: '100ml', label: '100ml Sellado', price: 68000, inStock: true },
+      { size: '100ml', label: 'Sellado', price: 68000, inStock: true },
     ],
     pyramid: {
       top: ['Canela', 'Bergamota'],
@@ -216,7 +216,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
       prices: [
         { size: '5ml', label: 'Decant 5ml', price: 7500, inStock: true },
         { size: '10ml', label: 'Decant 10ml', price: 13500, inStock: true },
-        { size: '100ml', label: '100ml Sellado', price: 68000, inStock: true },
+        { size: '100ml', label: 'Sellado', price: 68000, inStock: true },
       ],
       pyramid: {
         top: ['Canela', 'Bergamota'],
@@ -505,9 +505,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
                       <span className="text-emerald-400 font-semibold">{fragrance.stock} un.</span>
                     </div>
                     <div className="flex justify-between text-zinc-400">
-                      <span>Precio regular (100ml):</span>
+                      <span>Precio Sellado:</span>
                       <span className="text-brand-gold font-bold">
-                        ${fragrance.prices.find((p) => p.size === '100ml')?.price.toLocaleString('es-AR') ||
+                        ${fragrance.prices.find((p) => p.size === '100ml' || p.size === 'sellado')?.price.toLocaleString('es-AR') ||
                           fragrance.prices[0]?.price.toLocaleString('es-AR')}
                       </span>
                     </div>
@@ -1144,10 +1144,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userEmail }) => 
                     />
                   </div>
                   <div>
-                    <label className="block text-zinc-400 mb-1">Frasco Sellado 100ml ($ ARS)</label>
+                    <label className="block text-zinc-400 mb-1">Perfume Sellado ($ ARS)</label>
                     <input
                       type="number"
-                      value={productForm.prices?.find((p) => p.size === '100ml')?.price || 68000}
+                      value={productForm.prices?.find((p) => p.size === '100ml' || p.size === 'sellado')?.price || 68000}
                       onChange={(e) => {
                         const newPrices = (productForm.prices || []).map((p) =>
                           p.size === '100ml' ? { ...p, price: Number(e.target.value) } : p

@@ -10,9 +10,29 @@ export const QuickViewModal: React.FC = () => {
   const [selectedPrice, setSelectedPrice] = useState<DecantPrice | null>(null);
   const [isAdded, setIsAdded] = useState(false);
 
+  const formatSizeLabel = (p: DecantPrice) => {
+    if (p.size === '100ml' || p.size === 'sellado') return 'Sellado';
+    if (p.label && p.label.toLowerCase().includes('sellado')) return 'Sellado';
+    return p.size;
+  };
+
+  const sortedPrices = React.useMemo(() => {
+    if (!fragrance || !fragrance.prices) return [];
+    return [...fragrance.prices].sort((a, b) => {
+      const isSealedA = a.size === '100ml' || a.size === 'sellado' || a.label?.toLowerCase().includes('sellado');
+      const isSealedB = b.size === '100ml' || b.size === 'sellado' || b.label?.toLowerCase().includes('sellado');
+      if (isSealedA && !isSealedB) return -1;
+      if (!isSealedA && isSealedB) return 1;
+      return b.price - a.price;
+    });
+  }, [fragrance]);
+
   useEffect(() => {
     if (fragrance && fragrance.prices.length > 0) {
-      setSelectedPrice(fragrance.prices[0]);
+      const sealed = fragrance.prices.find(
+        (p) => p.size === '100ml' || p.size === 'sellado' || p.label?.toLowerCase().includes('sellado')
+      ) || fragrance.prices[fragrance.prices.length - 1] || fragrance.prices[0];
+      setSelectedPrice(sealed);
     }
   }, [fragrance]);
 
@@ -25,6 +45,8 @@ export const QuickViewModal: React.FC = () => {
   }, []);
 
   if (!fragrance || !selectedPrice) return null;
+
+  const displaySelectedLabel = formatSizeLabel(selectedPrice);
 
   const handleAddToCart = () => {
     addToCart(
@@ -45,12 +67,11 @@ export const QuickViewModal: React.FC = () => {
   const getPricePerMl = (p: DecantPrice) => {
     if (p.size === '5ml') return `$${Math.round(p.price / 5).toLocaleString('es-AR')}/ml`;
     if (p.size === '10ml') return `$${Math.round(p.price / 10).toLocaleString('es-AR')}/ml`;
-    if (p.size === '100ml') return `$${Math.round(p.price / 100).toLocaleString('es-AR')}/ml`;
     return null;
   };
 
   const whatsappDirectMsg = encodeURIComponent(
-    `✨ *¡Hola Le Désir Fragancias!* Me interesa comprar:\n• *${fragrance.name}* (${fragrance.brand})\n• Medida: ${selectedPrice.size} ($${selectedPrice.price.toLocaleString('es-AR')})\n¿Tienen disponibilidad para coordinar el envío?`
+    `✨ *¡Hola Le Désir Fragancias!* Me interesa comprar:\n• *${fragrance.name}* (${fragrance.brand})\n• Presentación: ${displaySelectedLabel} ($${selectedPrice.price.toLocaleString('es-AR')})\n¿Tienen disponibilidad para coordinar el envío?`
   );
 
   const isContainFit =
@@ -316,8 +337,9 @@ export const QuickViewModal: React.FC = () => {
                 Selecciona tamaño o decant:
               </label>
               <div className="grid grid-cols-3 gap-2">
-                {fragrance.prices.map((p) => {
+                {sortedPrices.map((p) => {
                   const active = selectedPrice.size === p.size;
+                  const label = formatSizeLabel(p);
                   return (
                     <button
                       key={p.size}
@@ -329,11 +351,11 @@ export const QuickViewModal: React.FC = () => {
                           : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20 hover:text-zinc-200'
                       }`}
                     >
-                      <span className="block text-xs font-bold">{p.size}</span>
+                      <span className="block text-xs font-bold">{label}</span>
                       <span className="block text-[11px] text-brand-gold font-semibold mt-0.5">
                         ${p.price.toLocaleString('es-AR')}
                       </span>
-                      {getPricePerMl(p) && (
+                      {getPricePerMl(p) && p.size !== '100ml' && p.size !== 'sellado' && (
                         <span className="block text-[9px] text-zinc-400 mt-0.5 font-medium">
                           {getPricePerMl(p)}
                         </span>
@@ -356,7 +378,7 @@ export const QuickViewModal: React.FC = () => {
               }`}
             >
               <ShoppingBag className="w-4 h-4" />
-              {isAdded ? '¡Agregado al Carrito!' : `Añadir (${selectedPrice.size}) • $${selectedPrice.price.toLocaleString('es-AR')}`}
+              {isAdded ? '¡Agregado al Carrito!' : `Añadir (${displaySelectedLabel}) • $${selectedPrice.price.toLocaleString('es-AR')}`}
             </button>
 
             <a

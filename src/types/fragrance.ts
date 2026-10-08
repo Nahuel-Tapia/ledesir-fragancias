@@ -16,7 +16,7 @@ export interface OlfactoryPyramid {
 }
 
 export interface DecantPrice {
-  size: '5ml' | '10ml' | '100ml' | 'unidad';
+  size: '5ml' | '10ml' | '100ml' | 'sellado' | 'unidad' | string;
   label: string;
   price: number;
   originalPrice?: number;
@@ -58,7 +58,7 @@ export interface CartItem {
   name: string;
   brand: string;
   image: string;
-  size: '5ml' | '10ml' | '100ml' | 'unidad';
+  size: '5ml' | '10ml' | '100ml' | 'sellado' | 'unidad' | string;
   price: number;
   quantity: number;
 }

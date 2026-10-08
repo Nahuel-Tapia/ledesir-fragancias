@@ -202,7 +202,7 @@ export const FragranceQuizModal: React.FC<QuizProps> = ({ isOpen, onClose }) => 
             <p className="text-xs font-semibold text-zinc-300 mb-2">¿Cómo prefieres empezar tu experiencia?</p>
             {[
               { id: 'decant', label: '🧪 Quiero empezar con Decants (5ml / 10ml)', desc: 'Para probarlo en mi piel varias semanas sin gastar tanto' },
-              { id: 'botella', label: '🍾 Busco la Botella Completa Sellada', desc: 'Quiero el frasco de 100ml original para mi colección' },
+              { id: 'botella', label: '🍾 Busco el Perfume Completo Sellado', desc: 'Quiero el frasco sellado original para mi colección' },
             ].map((opt) => (
               <button
                 key={opt.id}

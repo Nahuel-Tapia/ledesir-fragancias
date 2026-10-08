@@ -208,7 +208,7 @@ export const CartDrawer: React.FC = () => {
                       </div>
                       <p className="text-[11px] text-brand-gold font-medium">{item.brand}</p>
                       <span className="inline-block mt-0.5 text-[10px] px-2 py-0.5 rounded bg-white/5 text-zinc-300 border border-white/5 font-mono">
-                        {item.size}
+                        {item.size === '100ml' || item.size === 'sellado' ? 'Sellado' : item.size}
                       </span>
                     </div>
 

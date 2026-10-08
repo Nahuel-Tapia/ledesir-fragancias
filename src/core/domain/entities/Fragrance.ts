@@ -7,7 +7,7 @@
 export type FragranceCategory = 'arabe' | 'disenador' | 'nicho' | 'extra';
 
 export interface DecantPrice {
-  size: '5ml' | '10ml' | '100ml' | 'unidad';
+  size: '5ml' | '10ml' | '100ml' | 'sellado' | 'unidad' | string;
   label: string;
   price: number;
   originalPrice?: number;

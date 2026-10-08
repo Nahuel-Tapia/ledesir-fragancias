@@ -1,16 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import type { Fragrance, DecantPrice } from '../../types/fragrance';
 import { addToCart } from '../../stores/cartStore';
 import { openQuickView } from '../../stores/catalogStore';
-import { ShoppingBag, Eye, Sparkles, Check, Flame, ExternalLink } from 'lucide-react';
+import { ShoppingBag, Eye, Sparkles, Check, Flame } from 'lucide-react';
 
 interface ProductCardProps {
   fragrance: Fragrance;
 }
 
+export const formatSizeLabel = (p: DecantPrice) => {
+  if (p.size === '100ml' || p.size === 'sellado') return 'Sellado';
+  if (p.label && p.label.toLowerCase().includes('sellado')) return 'Sellado';
+  return p.size;
+};
+
 export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
+  // Ordenar presentaciones: 'Sellado' primero, luego decants de mayor a menor
+  const sortedPrices = useMemo(() => {
+    if (!fragrance.prices || fragrance.prices.length === 0) {
+      return [{ size: '100ml', label: 'Sellado', price: 0, inStock: true } as DecantPrice];
+    }
+    return [...fragrance.prices].sort((a, b) => {
+      const isSealedA = a.size === '100ml' || a.size === 'sellado' || a.label?.toLowerCase().includes('sellado');
+      const isSealedB = b.size === '100ml' || b.size === 'sellado' || b.label?.toLowerCase().includes('sellado');
+      if (isSealedA && !isSealedB) return -1;
+      if (!isSealedA && isSealedB) return 1;
+      return b.price - a.price;
+    });
+  }, [fragrance.prices]);
+
+  // Precio inicial: el perfume sellado
   const [selectedPrice, setSelectedPrice] = useState<DecantPrice>(
-    fragrance.prices[0] || { size: '100ml', label: '100ml', price: 0, inStock: true }
+    sortedPrices[0] || { size: '100ml', label: 'Sellado', price: 0, inStock: true }
   );
   const [isAdded, setIsAdded] = useState(false);
 
@@ -40,7 +61,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
   const getPricePerMl = (p: DecantPrice) => {
     if (p.size === '5ml') return `$${Math.round(p.price / 5).toLocaleString('es-AR')}/ml`;
     if (p.size === '10ml') return `$${Math.round(p.price / 10).toLocaleString('es-AR')}/ml`;
-    if (p.size === '100ml') return `$${Math.round(p.price / 100).toLocaleString('es-AR')}/ml`;
     return null;
   };
 
@@ -50,10 +70,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
       (fragrance.image.toLowerCase().includes('.png') ||
         fragrance.image.startsWith('data:image/png')));
 
+  const isSealedSelected =
+    selectedPrice.size === '100ml' ||
+    selectedPrice.size === 'sellado' ||
+    selectedPrice.label?.toLowerCase().includes('sellado');
+
   return (
     <article
       onClick={() => openQuickView(fragrance)}
-      className="group relative rounded-2xl bg-brand-surface/70 border border-white/10 hover:border-brand-gold/40 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-luxury hover:shadow-glow cursor-pointer"
+      className="group relative rounded-2xl bg-brand-surface/80 border border-white/10 hover:border-brand-gold/40 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-luxury hover:shadow-glow cursor-pointer"
     >
       {/* Top Image Container with Studio Lighting Backdrop */}
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-gradient-to-b from-zinc-800/90 via-zinc-900 to-zinc-950 flex items-center justify-center">
@@ -76,7 +101,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
           {fragrance.stock > 0 && fragrance.stock <= 5 && (
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/30 text-rose-200 border border-rose-500/40 backdrop-blur-md shadow-lg animate-pulse">
-              ⚡ ¡Últimas {fragrance.stock} unid!
+              ⚡ Últimas {fragrance.stock} unid
             </span>
           )}
           {fragrance.isBestSeller && (
@@ -98,27 +123,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
           )}
         </div>
 
-        {/* Quick View Button on Hover */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 backdrop-blur-[2px] z-10 p-4">
-          <button
-            onClick={handleQuickView}
-            className="px-4 py-2 rounded-xl bg-zinc-900/90 text-white text-xs font-medium border border-white/20 hover:border-brand-gold hover:text-brand-gold transition-all flex items-center gap-2 shadow-xl transform translate-y-2 group-hover:translate-y-0 duration-300"
-          >
-            <Eye className="w-4 h-4" />
-            Pirámide Olfativa
-          </button>
-          {fragrance.fragranticaUrl && (
-            <a
-              href={fragrance.fragranticaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="px-3 py-1.5 rounded-xl bg-black/80 hover:bg-zinc-900 text-amber-300 text-[11px] font-medium border border-amber-400/40 hover:border-amber-400 transition-all flex items-center gap-1.5 shadow-xl transform translate-y-2 group-hover:translate-y-0 duration-300"
-            >
-              <span>Ficha Fragrantica</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          )}
+        {/* Quick View cue on Hover */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-[2px] z-10 p-4">
+          <span className="px-3.5 py-2 rounded-xl bg-zinc-900/90 text-brand-gold-light text-xs font-semibold border border-brand-gold/40 flex items-center gap-2 shadow-xl transform translate-y-2 group-hover:translate-y-0 duration-300">
+            <Eye className="w-3.5 h-3.5 text-brand-gold" />
+            <span>Ver detalle & notas</span>
+          </span>
         </div>
 
         {/* Perfume Category & Gender indicator (Bottom Left) */}
@@ -151,117 +161,58 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
         </div>
       </div>
 
-      {/* Card Content */}
+      {/* Card Content - Clean, elegant & uncluttered */}
       <div className="p-4 sm:p-5 flex flex-col flex-grow justify-between gap-3">
         <div>
-          {/* Brand & Name */}
-          <p className="text-xs text-brand-gold font-medium uppercase tracking-wider">
-            {fragrance.brand}
-          </p>
+          {/* Brand & Olfactory Family */}
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-[11px] text-brand-gold font-semibold uppercase tracking-wider">
+              {fragrance.brand}
+            </p>
+            {fragrance.families?.[0] && (
+              <span className="text-[10px] text-zinc-400 font-medium truncate max-w-[120px]">
+                {fragrance.families[0]}
+              </span>
+            )}
+          </div>
+
+          {/* Name */}
           <h3 className="font-editorial text-lg sm:text-xl font-bold text-white tracking-wide group-hover:text-brand-gold-light transition-colors mt-0.5 line-clamp-1">
             {fragrance.name}
           </h3>
 
-          {/* Inspiration hint */}
-          {fragrance.inspiredBy && (
-            <div className="mt-1 flex items-center gap-1.5 text-[11px] text-amber-300/90 font-medium line-clamp-1">
+          {/* Clean inspiration or subtitle hint (single line) */}
+          {fragrance.inspiredBy ? (
+            <div className="mt-1 flex items-center gap-1.5 text-[11px] text-amber-300/80 font-medium line-clamp-1">
               <Sparkles className="w-3 h-3 text-brand-gold flex-shrink-0" />
-              <span>{fragrance.inspiredBy}</span>
+              <span className="truncate">{fragrance.inspiredBy}</span>
             </div>
-          )}
-
-          {/* Ocasión, Estación & Perfil Olfativo Badges */}
-          {(() => {
-            const occasionsList = (Array.isArray(fragrance.occasions) && fragrance.occasions.length > 0)
-              ? fragrance.occasions
-              : fragrance.occasion ? [fragrance.occasion] : [];
-            const mainFamily = fragrance.families?.[0];
-
-            return (
-              <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                {/* Perfil Olfativo Genérico (Vinculado al Test) */}
-                {mainFamily && (
-                  <span className="text-[10px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20 font-medium">
-                    {mainFamily.includes('Gourmand') && '🍯 '}
-                    {mainFamily.includes('Cítrico') && '🍋 '}
-                    {mainFamily.includes('Amaderado') && '🪵 '}
-                    {mainFamily.includes('Oriental') && '🌶️ '}
-                    {mainFamily.includes('Aromático') && '🌿 '}
-                    {mainFamily.includes('Cuero') && '👞 '}
-                    {mainFamily.includes('Acuático') && '🌊 '}
-                    {mainFamily.includes('Floral') && '🌸 '}
-                    {mainFamily}
-                  </span>
-                )}
-
-                {/* Múltiples Ocasiones */}
-                {occasionsList.slice(0, 2).map((occ, idx) => (
-                  <span
-                    key={idx}
-                    className="text-[10px] text-zinc-300 bg-white/5 px-2 py-0.5 rounded-md border border-white/10 flex items-center gap-1 font-medium"
-                  >
-                    <span>✨</span>
-                    <span>{occ}</span>
-                  </span>
-                ))}
-                {occasionsList.length > 2 && (
-                  <span className="text-[9px] text-zinc-400 bg-white/5 px-1.5 py-0.5 rounded-md border border-white/5">
-                    +{occasionsList.length - 2}
-                  </span>
-                )}
-
-                {/* Estación */}
-                {fragrance.season && (
-                  <span className="text-[10px] text-zinc-400 bg-zinc-900 px-2 py-0.5 rounded-md border border-white/5 flex items-center gap-1">
-                    <span>🌤️</span>
-                    <span>{fragrance.season}</span>
-                  </span>
-                )}
-              </div>
-            );
-          })()}
-
-          {/* Fragrantica Link (Notas y Acordes) */}
-          {fragrance.fragranticaUrl && (
-            <div className="mt-2.5" onClick={(e) => e.stopPropagation()}>
-              <a
-                href={fragrance.fragranticaUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900/90 hover:bg-amber-500/15 border border-white/10 hover:border-amber-400/40 text-[11px] text-zinc-300 hover:text-amber-300 transition-all group/frag shadow-sm"
-                title="Ver notas completas, acordes y votos en Fragrantica"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                <span className="font-serif italic font-semibold text-amber-300/90">Fragrantica</span>
-                <span className="text-zinc-400 group-hover/frag:text-white transition-colors">Notas & acordes</span>
-                <ExternalLink className="w-3 h-3 text-zinc-500 group-hover/frag:text-amber-300 transition-colors" />
-              </a>
-            </div>
-          )}
+          ) : fragrance.subtitle ? (
+            <p className="mt-1 text-[11px] text-zinc-400 line-clamp-1">
+              {fragrance.subtitle}
+            </p>
+          ) : null}
         </div>
 
-        {/* Size / Decant Pill Selector */}
-        {fragrance.prices.length > 1 && (
-          <div className="pt-2 border-t border-white/5">
-            <div className="text-[10px] text-zinc-400 mb-1.5 font-medium flex justify-between">
-              <span>Seleccionar presentación:</span>
-              <span className="text-brand-gold">{selectedPrice.size}</span>
-            </div>
-            <div className="flex gap-1.5" onClick={(e) => e.stopPropagation()}>
-              {fragrance.prices.map((p) => {
+        {/* Size / Format Pills Selector (Sellado | 10ml | 5ml) */}
+        {sortedPrices.length > 1 && (
+          <div className="pt-2 border-t border-white/5" onClick={(e) => e.stopPropagation()}>
+            <div className="flex gap-1.5">
+              {sortedPrices.map((p) => {
                 const isSelected = selectedPrice.size === p.size;
+                const label = formatSizeLabel(p);
                 return (
                   <button
                     key={p.size}
                     type="button"
                     onClick={() => setSelectedPrice(p)}
-                    className={`flex-1 py-1 px-1.5 text-[11px] font-semibold rounded-lg border transition-all ${
+                    className={`flex-1 py-1 px-1 text-[11px] font-semibold rounded-lg border transition-all truncate text-center ${
                       isSelected
-                        ? 'bg-brand-gold/20 text-brand-gold-light border-brand-gold shadow-sm'
+                        ? 'bg-brand-gold text-brand-dark border-brand-gold shadow-sm font-bold'
                         : 'bg-white/5 text-zinc-400 border-white/10 hover:border-white/20 hover:text-zinc-200'
                     }`}
                   >
-                    {p.size}
+                    {label}
                   </button>
                 );
               })}
@@ -269,51 +220,67 @@ export const ProductCard: React.FC<ProductCardProps> = ({ fragrance }) => {
           </div>
         )}
 
-        {/* Price & Action Button */}
-        <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-3 mt-1">
-          <div>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-lg font-bold text-white tracking-tight">
-                ${selectedPrice.price.toLocaleString('es-AR')}
+        {/* Price & Action Buttons */}
+        <div className="pt-2.5 border-t border-white/10 flex flex-col gap-2.5">
+          <div className="flex items-baseline justify-between">
+            <div>
+              <span className="text-[10px] text-zinc-400 uppercase tracking-wider block font-medium">
+                {isSealedSelected ? 'Frasco Sellado' : `Decant ${selectedPrice.size}`}
               </span>
-              {selectedPrice.originalPrice && (
-                <span className="text-xs text-zinc-500 line-through">
-                  ${selectedPrice.originalPrice.toLocaleString('es-AR')}
+              <div className="flex items-baseline gap-2">
+                <span className="text-xl sm:text-2xl font-bold text-white tracking-tight font-editorial">
+                  ${selectedPrice.price.toLocaleString('es-AR')}
                 </span>
-              )}
+                {selectedPrice.originalPrice && selectedPrice.originalPrice > selectedPrice.price && (
+                  <span className="text-xs text-zinc-500 line-through">
+                    ${selectedPrice.originalPrice.toLocaleString('es-AR')}
+                  </span>
+                )}
+              </div>
             </div>
-            <span className="text-[10px] text-zinc-400 block">
-              {selectedPrice.size === '100ml' ? 'Frasco Sellado' : selectedPrice.size === 'unidad' ? 'Pack Completo' : 'Atomizador Decant'}
-              {getPricePerMl(selectedPrice) && (
-                <span className="text-amber-300/90 ml-1 font-semibold">
-                  • {getPricePerMl(selectedPrice)}
-                </span>
-              )}
-            </span>
+
+            {/* If Decant selected, show per ml tag */}
+            {getPricePerMl(selectedPrice) && !isSealedSelected && (
+              <span className="text-[10px] text-amber-300/80 font-medium bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                {getPricePerMl(selectedPrice)}
+              </span>
+            )}
           </div>
 
-          <button
-            type="button"
-            onClick={handleAddToCart}
-            className={`p-2.5 rounded-xl font-medium text-xs flex items-center gap-1.5 transition-all duration-200 active:scale-95 ${
-              isAdded
-                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
-                : 'bg-brand-gold hover:bg-brand-gold-light text-brand-dark font-semibold shadow-lg shadow-brand-gold/20'
-            }`}
-            aria-label={`Añadir ${fragrance.name} al carrito`}
-          >
-            {isAdded ? (
-              <>
-                <Check className="w-4 h-4" />
-                <span className="hidden sm:inline">¡Listo!</span>
-              </>
-            ) : (
-              <>
-                <ShoppingBag className="w-4 h-4" />
-                <span className="hidden sm:inline">Añadir</span>
-              </>
-            )}
-          </button>
+          {/* Action Buttons: "Ver detalle" and "Añadir" */}
+          <div className="grid grid-cols-2 gap-2" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              onClick={handleQuickView}
+              className="py-2 px-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-200 hover:text-white border border-white/15 hover:border-brand-gold/40 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all active:scale-95"
+            >
+              <Eye className="w-3.5 h-3.5 text-brand-gold flex-shrink-0" />
+              <span>Ver detalle</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              className={`py-2 px-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all duration-200 active:scale-95 shadow-md ${
+                isAdded
+                  ? 'bg-emerald-600 text-white shadow-emerald-600/30'
+                  : 'bg-brand-gold hover:bg-brand-gold-light text-brand-dark shadow-brand-gold/20'
+              }`}
+              aria-label={`Añadir ${fragrance.name} al carrito`}
+            >
+              {isAdded ? (
+                <>
+                  <Check className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span>¡Listo!</span>
+                </>
+              ) : (
+                <>
+                  <ShoppingBag className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span>Añadir</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </article>

@@ -51,7 +51,7 @@ export const setPaymentMethod = (method: 'transfer' | 'card') => $paymentMethod.
 
 export const addToCart = (
   fragrance: { id: string; name: string; brand: string; image: string },
-  size: '5ml' | '10ml' | '100ml' | 'unidad',
+  size: '5ml' | '10ml' | '100ml' | 'sellado' | 'unidad' | string,
   price: number,
   quantity = 1
 ) => {
@@ -181,7 +181,8 @@ export const generateWhatsAppLink = (customerName = '', customerCity = ''): stri
 
   items.forEach((item) => {
     text += `🔹 *${item.name}* (${item.brand})\n`;
-    text += `   • Medida: ${item.size}\n`;
+    const sizeLabel = item.size === '100ml' || item.size === 'sellado' ? 'Sellado' : item.size;
+    text += `   • Medida: ${sizeLabel}\n`;
     text += `   • Cantidad: ${item.quantity}x\n`;
     text += `   • Subtotal: ${formatCurrency(item.price * item.quantity)}\n\n`;
   });
