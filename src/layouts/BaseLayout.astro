@@ -55,12 +55,12 @@ const {
     <!-- Footer -->
     <Footer />
 
-    <!-- Floating WhatsApp Quick Button (lifted on mobile to avoid bottom nav) -->
+    <!-- Floating WhatsApp Button (Desktop only; on mobile, cleanly integrated in footer and navigation) -->
     <a
       href="https://wa.me/5492645162780?text=Hola%20Le%20D%C3%A9sir!%20Quisiera%20hacer%20una%20consulta"
       target="_blank"
       rel="noopener noreferrer"
-      class="fixed bottom-20 md:bottom-6 right-5 md:right-6 z-40 p-3.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-2xl shadow-emerald-900/50 hover:scale-110 active:scale-95 transition-all duration-200 flex items-center justify-center group"
+      class="hidden md:flex fixed bottom-6 right-6 z-40 p-3.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-2xl shadow-emerald-900/50 hover:scale-105 active:scale-95 transition-all duration-200 items-center justify-center group"
       aria-label="Contactar por WhatsApp"
     >
       <MessageCircle class="w-6 h-6 fill-white" />

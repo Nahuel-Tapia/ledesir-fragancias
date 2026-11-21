@@ -57,11 +57,10 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ initialBanners = [] 
 
       {/* Slide Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20 text-center flex flex-col items-center">
-        {/* Pill Badge */}
+        {/* Pill Badge - Minimalist */}
         {slide.badge && (
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 rounded-full border border-brand-gold/30 bg-brand-gold/10 text-brand-gold-light text-[11px] sm:text-xs font-semibold tracking-wider mb-4 sm:mb-6 backdrop-blur-md shadow-lg">
-            <Sparkles className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-brand-gold" />
-            <span>{slide.badge}</span>
+          <div className="inline-flex items-center px-3 sm:px-3.5 py-1 rounded-full border border-brand-gold/30 bg-brand-gold/10 text-brand-gold-light text-[11px] sm:text-xs font-medium tracking-widest uppercase mb-4 sm:mb-6 backdrop-blur-md">
+            <span>{slide.badge.replace(/[✨💎👑]/g, '').trim()}</span>
           </div>
         )}
 
@@ -80,24 +79,15 @@ export const HeroCarousel: React.FC<HeroCarouselProps> = ({ initialBanners = [] 
           {slide.subtitle}
         </p>
 
-        {/* Action Buttons */}
-        <div className="mt-6 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto">
+        {/* Single Primary Action Button */}
+        <div className="mt-6 sm:mt-10 flex items-center justify-center w-full sm:w-auto">
           <a
             href={slide.ctaLink}
-            className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl bg-brand-gold hover:bg-brand-gold-light text-brand-dark font-bold text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-lg shadow-brand-gold/25 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
+            className="w-full sm:w-auto px-7 sm:px-9 py-3 sm:py-3.5 rounded-xl bg-brand-gold hover:bg-brand-gold-light text-brand-dark font-bold text-xs tracking-widest uppercase flex items-center justify-center gap-2 shadow-lg shadow-brand-gold/20 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
           >
             <span>{slide.ctaText}</span>
             <ArrowRight className="w-4 h-4" />
           </a>
-
-          {slide.secondaryCtaText && slide.secondaryCtaLink && (
-            <a
-              href={slide.secondaryCtaLink}
-              className="w-full sm:w-auto px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-200 border border-white/15 text-xs font-semibold tracking-wider uppercase backdrop-blur-md hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200"
-            >
-              {slide.secondaryCtaText}
-            </a>
-          )}
         </div>
 
         {/* Dot Pagination */}

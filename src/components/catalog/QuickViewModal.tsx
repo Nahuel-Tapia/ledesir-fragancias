@@ -3,7 +3,7 @@ import { useStore } from '@nanostores/react';
 import { $quickViewFragrance, closeQuickView } from '../../stores/catalogStore';
 import { addToCart, WHATSAPP_PHONE } from '../../stores/cartStore';
 import type { DecantPrice } from '../../types/fragrance';
-import { X, ShoppingBag, MessageCircle, Clock, Wind, Sparkles, ExternalLink } from 'lucide-react';
+import { X, ShoppingBag, MessageCircle, ExternalLink } from 'lucide-react';
 
 export const QuickViewModal: React.FC = () => {
   const fragrance = useStore($quickViewFragrance);
@@ -80,6 +80,10 @@ export const QuickViewModal: React.FC = () => {
       (fragrance.image.toLowerCase().includes('.png') ||
         fragrance.image.startsWith('data:image/png')));
 
+  const occasionsList = (Array.isArray(fragrance.occasions) && fragrance.occasions.length > 0)
+    ? fragrance.occasions
+    : fragrance.occasion ? [fragrance.occasion] : [];
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
@@ -87,7 +91,7 @@ export const QuickViewModal: React.FC = () => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-2xl sm:rounded-3xl bg-brand-surface border border-white/15 p-4 sm:p-6 md:p-8 shadow-2xl flex flex-col md:flex-row gap-5 md:gap-8"
+        className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-2xl sm:rounded-3xl bg-brand-surface border border-white/10 p-4 sm:p-6 md:p-8 shadow-2xl flex flex-col md:flex-row gap-5 md:gap-8"
       >
         {/* Close Button */}
         <button
@@ -98,9 +102,9 @@ export const QuickViewModal: React.FC = () => {
           <X className="w-5 h-5" />
         </button>
 
-        {/* Left Column: Image */}
+        {/* Left Column: Image & Clean Performance Specs */}
         <div className="w-full md:w-1/2 flex flex-col items-center">
-          <div className="relative w-full aspect-[4/3] sm:aspect-[4/5] max-h-56 sm:max-h-80 md:max-h-none rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-b from-zinc-800/90 via-zinc-900 to-zinc-950 border border-white/10 shadow-luxury flex items-center justify-center">
+          <div className="relative w-full aspect-[4/3] sm:aspect-[4/5] max-h-56 sm:max-h-80 md:max-h-none rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-b from-zinc-900 to-zinc-950 border border-white/5 flex items-center justify-center">
             <img
               src={fragrance.image}
               alt={fragrance.name}
@@ -108,233 +112,122 @@ export const QuickViewModal: React.FC = () => {
                 isContainFit ? 'object-contain p-4 sm:p-6' : 'object-cover'
               } object-center relative z-0`}
             />
-
-            {/* Studio Spotlight & Radial Lighting Gradient */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,_rgba(255,255,255,0.08)_0%,_rgba(35,35,42,0.25)_45%,_rgba(15,15,18,0.8)_100%)] pointer-events-none z-[1]" />
-
-            {/* Ambient Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-black/30 pointer-events-none z-[2]" />
-
-            <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-[10px] font-semibold text-brand-gold border border-brand-gold/30 flex items-center gap-1.5 shadow-md z-10">
-              <span>{fragrance.gender === 'Masculino' ? '🎩' : fragrance.gender === 'Femenino' ? '🌸' : '✨'}</span>
-              <span>{fragrance.gender}</span>
-            </div>
-
-            {/* Official Le Désir Luxury Watermark Stamp (Bottom Right) */}
-            <div className="absolute bottom-3 right-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 text-white shadow-lg pointer-events-none select-none">
-              <svg
-                className="w-3.5 h-3.5 text-brand-gold flex-shrink-0"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-              >
-                <rect x="9" y="2" width="6" height="4" rx="1" fill="currentColor" fillOpacity="0.25" />
-                <path d="M10 6h4v2h-4z" fill="currentColor" fillOpacity="0.5" />
-                <path d="M6 9h12l-1.5 12h-9L6 9z" stroke="currentColor" />
-                <line x1="8" y1="15" x2="16" y2="15" stroke="currentColor" strokeWidth="1" strokeOpacity="0.6" />
-              </svg>
-              <span className="text-[10px] font-editorial uppercase tracking-[0.2em] text-zinc-200 font-semibold leading-none">
-                Le Désir
-              </span>
-            </div>
           </div>
 
-          {/* Visual Performance meters */}
-          <div className="w-full space-y-2.5 mt-4 p-3.5 rounded-2xl bg-zinc-950/70 border border-white/5">
-            {/* Longevity Bar */}
-            <div>
-              <div className="flex items-center justify-between text-xs mb-1">
-                <span className="flex items-center gap-1.5 text-brand-gold font-semibold text-[11px]">
-                  <Clock className="w-3.5 h-3.5" />
-                  Longevidad en Piel
-                </span>
-                <span className="text-[11px] text-zinc-300 font-medium">
-                  {fragrance.longevity}
-                </span>
-              </div>
-              <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-amber-600 via-brand-gold to-yellow-300 transition-all duration-500 shadow-sm"
-                  style={{
-                    width:
-                      fragrance.longevity.includes('+12h') || fragrance.longevity.includes('Bestia')
-                        ? '100%'
-                        : fragrance.longevity.includes('8-12h')
-                        ? '85%'
-                        : '65%',
-                  }}
-                />
-              </div>
+          {/* Clean Editorial Performance Strip (Replaced progress bars) */}
+          {(fragrance.longevity || fragrance.sillage) && (
+            <div className="w-full mt-3 p-3 rounded-xl bg-zinc-950/50 border border-white/5 flex items-center justify-around text-xs">
+              {fragrance.longevity && (
+                <div className="text-center">
+                  <span className="block text-[10px] text-zinc-500 uppercase tracking-wider">Longevidad</span>
+                  <span className="font-medium text-zinc-200 mt-0.5 block">{fragrance.longevity}</span>
+                </div>
+              )}
+              {fragrance.longevity && fragrance.sillage && (
+                <div className="h-6 w-px bg-white/10" />
+              )}
+              {fragrance.sillage && (
+                <div className="text-center">
+                  <span className="block text-[10px] text-zinc-500 uppercase tracking-wider">Estela</span>
+                  <span className="font-medium text-zinc-200 mt-0.5 block">{fragrance.sillage}</span>
+                </div>
+              )}
             </div>
-
-            {/* Sillage Bar */}
-            <div>
-              <div className="flex items-center justify-between text-xs mb-1">
-                <span className="flex items-center gap-1.5 text-brand-gold font-semibold text-[11px]">
-                  <Wind className="w-3.5 h-3.5" />
-                  Estela & Proyección
-                </span>
-                <span className="text-[11px] text-zinc-300 font-medium">
-                  {fragrance.sillage}
-                </span>
-              </div>
-              <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-amber-600 via-brand-gold to-amber-300 transition-all duration-500 shadow-sm"
-                  style={{
-                    width:
-                      fragrance.sillage.includes('Pesada') || fragrance.sillage.includes('Enorme')
-                        ? '100%'
-                        : fragrance.sillage.includes('Moderada')
-                        ? '70%'
-                        : '35%',
-                  }}
-                />
-              </div>
-            </div>
-          </div>
+          )}
         </div>
 
-        {/* Right Column: Info & Olfactory Pyramid */}
+        {/* Right Column: Info & Olfactory Notes */}
         <div className="w-full md:w-1/2 flex flex-col justify-between">
           <div>
-            <span className="text-xs uppercase tracking-widest text-brand-gold font-semibold">
+            <span className="text-[11px] uppercase tracking-widest text-brand-gold font-medium">
               {fragrance.brand}
             </span>
-            <h2 className="font-editorial text-2xl sm:text-3xl font-bold text-white tracking-wide mt-1">
+            <h2 className="font-editorial text-2xl sm:text-3xl font-bold text-white tracking-wide mt-0.5">
               {fragrance.name}
             </h2>
-            {fragrance.subtitle && (
-              <p className="text-xs text-zinc-400 mt-0.5">{fragrance.subtitle}</p>
-            )}
 
-            {fragrance.inspiredBy && (
-              <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-medium">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>{fragrance.inspiredBy}</span>
-              </div>
-            )}
+            {fragrance.inspiredBy ? (
+              <p className="mt-1 text-xs text-amber-300/80 italic">
+                Inspirado en {fragrance.inspiredBy}
+              </p>
+            ) : fragrance.subtitle ? (
+              <p className="mt-0.5 text-xs text-zinc-400">{fragrance.subtitle}</p>
+            ) : null}
 
             <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mt-3">
               {fragrance.description}
             </p>
 
-            {/* Ocasiones, Estación & Perfil Olfativo Genérico */}
-            {(() => {
-              const occasionsList = (Array.isArray(fragrance.occasions) && fragrance.occasions.length > 0)
-                ? fragrance.occasions
-                : fragrance.occasion ? [fragrance.occasion] : [];
-
-              return (
-                <div className="space-y-2.5 mt-4">
-                  {/* Perfil Olfativo Genérico / Familias */}
-                  {fragrance.families && fragrance.families.length > 0 && (
-                    <div className="p-3 rounded-2xl bg-zinc-950/60 border border-white/5">
-                      <span className="text-[10px] uppercase font-bold text-brand-gold/90 block mb-1.5 tracking-wider">
-                        Perfil de Notas Genérico (Familia Olfativa):
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {fragrance.families.map((fam, idx) => (
-                          <span
-                            key={idx}
-                            className="text-xs px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 font-medium flex items-center gap-1.5"
-                          >
-                            <span>
-                              {fam.includes('Gourmand') && '🍯'}
-                              {fam.includes('Cítrico') && '🍋'}
-                              {fam.includes('Amaderado') && '🪵'}
-                              {fam.includes('Oriental') && '🌶️'}
-                              {fam.includes('Aromático') && '🌿'}
-                              {fam.includes('Cuero') && '👞'}
-                              {fam.includes('Acuático') && '🌊'}
-                              {fam.includes('Floral') && '🌸'}
-                            </span>
-                            <span>{fam}</span>
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Ocasiones & Estación */}
-                  {(occasionsList.length > 0 || fragrance.season) && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                      {occasionsList.length > 0 && (
-                        <div className="p-3 rounded-2xl bg-zinc-950/60 border border-white/5">
-                          <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-1.5">
-                            Ocasiones Recomendadas:
-                          </span>
-                          <div className="flex flex-wrap gap-1">
-                            {occasionsList.map((occ, idx) => (
-                              <span
-                                key={idx}
-                                className="text-[11px] text-zinc-200 bg-white/5 px-2 py-0.5 rounded-md border border-white/10 font-medium"
-                              >
-                                ✨ {occ}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      {fragrance.season && (
-                        <div className="p-3 rounded-2xl bg-zinc-950/60 border border-white/5">
-                          <span className="text-[10px] uppercase font-bold text-zinc-500 block mb-1.5">
-                            Estación Ideal:
-                          </span>
-                          <span className="text-xs text-brand-gold font-medium flex items-center gap-1.5">
-                            <span>🌤️</span>
-                            <span>{fragrance.season}</span>
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  )}
+            {/* Familias Olfativas (Píldoras limpias sin emojis) */}
+            {fragrance.families && fragrance.families.length > 0 && (
+              <div className="mt-4">
+                <span className="text-[10px] uppercase font-semibold text-zinc-400 block mb-1.5 tracking-wider">
+                  Familia Olfativa:
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {fragrance.families.map((fam, idx) => (
+                    <span
+                      key={idx}
+                      className="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-zinc-200 font-medium"
+                    >
+                      {fam}
+                    </span>
+                  ))}
                 </div>
-              );
-            })()}
-
-            {/* Ficha Técnica y Notas Olfativas en Fragrantica */}
-            <div className="mt-4 p-4 rounded-2xl bg-zinc-950/80 border border-brand-gold/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                  <span className="text-xs font-bold text-white font-editorial tracking-wide">
-                    Pirámide & Notas Olfativas
-                  </span>
-                </div>
-                <p className="text-[11px] text-zinc-400 mt-0.5">
-                  Ficha técnica oficial, notas de salida, corazón y fondo en Fragrantica.
-                </p>
               </div>
+            )}
 
+            {/* Ocasiones & Estación */}
+            {(occasionsList.length > 0 || fragrance.season) && (
+              <div className="mt-3.5 flex flex-wrap gap-2 text-xs">
+                {occasionsList.map((occ, idx) => (
+                  <span
+                    key={idx}
+                    className="text-[11px] text-zinc-300 bg-white/5 px-2.5 py-0.5 rounded-full border border-white/10"
+                  >
+                    {occ}
+                  </span>
+                ))}
+                {fragrance.season && (
+                  <span className="text-[11px] text-brand-gold bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
+                    {fragrance.season}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Fragrantica Link */}
+            <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between gap-3 text-xs">
+              <span className="text-zinc-400 text-[11px]">
+                Ficha oficial y notas olfativas:
+              </span>
               {fragrance.fragranticaUrl ? (
                 <a
                   href={fragrance.fragranticaUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-xl bg-brand-gold hover:bg-brand-gold-light text-brand-dark font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-lg shadow-brand-gold/20 flex-shrink-0"
+                  className="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-brand-gold hover:text-white border border-brand-gold/20 text-xs font-medium flex items-center gap-1.5 transition flex-shrink-0"
                 >
-                  <span className="font-serif italic font-semibold">Fragrantica</span>
-                  <span>Ver Notas ↗</span>
+                  <span>Fragrantica</span>
+                  <ExternalLink className="w-3 h-3" />
                 </a>
               ) : (
                 <a
                   href={`https://www.google.com/search?q=${encodeURIComponent(`${fragrance.brand} ${fragrance.name} fragrantica`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white border border-white/10 text-xs font-medium flex items-center justify-center gap-1.5 transition flex-shrink-0"
+                  className="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white border border-white/10 text-xs font-medium flex items-center gap-1.5 transition flex-shrink-0"
                 >
-                  <span>Buscar en Fragrantica</span>
+                  <span>Fragrantica</span>
                   <ExternalLink className="w-3 h-3" />
                 </a>
               )}
             </div>
 
             {/* Format Selection */}
-            <div className="mt-5">
-              <label className="text-xs font-semibold text-zinc-300 block mb-2">
-                Selecciona tamaño o decant:
+            <div className="mt-4">
+              <label className="text-xs font-medium text-zinc-300 block mb-2">
+                Presentación:
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {sortedPrices.map((p) => {
@@ -347,7 +240,7 @@ export const QuickViewModal: React.FC = () => {
                       onClick={() => setSelectedPrice(p)}
                       className={`p-2.5 rounded-xl text-center border transition-all ${
                         active
-                          ? 'border-brand-gold bg-brand-gold/15 text-white shadow-md ring-1 ring-brand-gold/30'
+                          ? 'border-brand-gold bg-brand-gold/15 text-white font-semibold'
                           : 'border-white/10 bg-white/5 text-zinc-400 hover:border-white/20 hover:text-zinc-200'
                       }`}
                     >
@@ -356,7 +249,7 @@ export const QuickViewModal: React.FC = () => {
                         ${p.price.toLocaleString('es-AR')}
                       </span>
                       {getPricePerMl(p) && p.size !== '100ml' && p.size !== 'sellado' && (
-                        <span className="block text-[9px] text-zinc-400 mt-0.5 font-medium">
+                        <span className="block text-[9px] text-zinc-500 mt-0.5">
                           {getPricePerMl(p)}
                         </span>
                       )}
@@ -367,14 +260,14 @@ export const QuickViewModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Action CTAs - Sticky bottom on mobile so user never has to scroll to buy */}
+          {/* Action CTAs - Sticky bottom on mobile */}
           <div className="mt-5 sm:mt-6 pt-3 sm:pt-4 border-t border-white/10 flex flex-col sm:flex-row gap-2.5 sm:gap-3 sticky bottom-0 bg-brand-surface/95 backdrop-blur-md -mx-4 -mb-4 p-4 sm:p-0 sm:m-0 sm:static sm:bg-transparent z-20">
             <button
               onClick={handleAddToCart}
               className={`flex-1 py-3 px-4 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
                 isAdded
                   ? 'bg-emerald-600 text-white shadow-emerald-600/30'
-                  : 'bg-brand-gold hover:bg-brand-gold-light text-brand-dark shadow-lg shadow-brand-gold/20'
+                  : 'bg-brand-gold hover:bg-brand-gold-light text-brand-dark shadow-md shadow-brand-gold/15'
               }`}
             >
               <ShoppingBag className="w-4 h-4" />
@@ -385,7 +278,7 @@ export const QuickViewModal: React.FC = () => {
               href={`https://wa.me/${WHATSAPP_PHONE}?text=${whatsappDirectMsg}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2.5 sm:py-3 px-4 rounded-xl border border-emerald-500/40 bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 text-xs font-semibold flex items-center justify-center gap-2 transition active:scale-[0.98]"
+              className="py-2.5 sm:py-3 px-4 rounded-xl border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 text-zinc-200 text-xs font-medium flex items-center justify-center gap-2 transition active:scale-[0.98]"
             >
               <MessageCircle className="w-4 h-4" />
               Pedir directo

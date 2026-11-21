@@ -4,7 +4,7 @@ import { $catalog, initCatalogWithServerData, syncCatalogWithBackend } from '../
 import { INITIAL_FRAGRANCES } from '../../data/initialFragrances';
 import { ProductCard } from './ProductCard';
 import type { Fragrance, FragranceCategory, OlfactoryFamily } from '../../types/fragrance';
-import { Search, X, Sparkles, SlidersHorizontal, User, Tag } from 'lucide-react';
+import { Search, X, SlidersHorizontal } from 'lucide-react';
 
 const FAMILIES: OlfactoryFamily[] = [
   'Oriental / Especiado',
@@ -161,36 +161,21 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   return (
     <div className="space-y-6 sm:space-y-8">
       {/* Category Nav Tabs with smooth horizontal touch scroll on mobile */}
-      <div className="flex overflow-x-auto no-scrollbar sm:flex-wrap items-center sm:justify-center gap-2 sm:gap-3 pb-1.5 -mx-4 px-4 sm:mx-0 sm:px-0">
+      <div className="flex overflow-x-auto no-scrollbar sm:flex-wrap items-center sm:justify-center gap-2 sm:gap-2.5 pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
         {[
           { id: 'all', label: 'Todas las Fragancias' },
-          { id: 'arabe', label: 'Perfumería Árabe 🇦🇪' },
-          { id: 'disenador', label: 'Diseñador & Nicho 🇫🇷', badge: 'Próximamente', disabled: true },
-          { id: 'extra', label: 'Decants & Accesorios ✨' },
+          { id: 'arabe', label: 'Perfumes Árabes' },
+          { id: 'extra', label: 'Decants & Muestras' },
         ].map((tab) => {
           const active = selectedCategory === tab.id;
-          if (tab.disabled) {
-            return (
-              <span
-                key={tab.id}
-                title="Categoría no disponible por el momento (Próximamente)"
-                className="whitespace-nowrap flex-shrink-0 px-3.5 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-white/[0.02] text-zinc-500 border border-white/5 cursor-not-allowed flex items-center gap-2 select-none opacity-60"
-              >
-                <span>{tab.label}</span>
-                <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-zinc-400 font-medium">
-                  {tab.badge}
-                </span>
-              </span>
-            );
-          }
           return (
             <button
               key={tab.id}
               onClick={() => setSelectedCategory(tab.id as any)}
-              className={`whitespace-nowrap flex-shrink-0 px-3.5 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-200 ${
+              className={`whitespace-nowrap flex-shrink-0 px-4 sm:px-5 py-2 rounded-full text-xs tracking-wider uppercase transition-all duration-200 ${
                 active
-                  ? 'bg-brand-gold text-brand-dark shadow-lg shadow-brand-gold/20 font-bold'
-                  : 'bg-white/5 text-zinc-300 hover:text-white hover:bg-white/10 border border-white/10'
+                  ? 'bg-brand-gold text-brand-dark font-bold shadow-md shadow-brand-gold/10'
+                  : 'bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 border border-white/5'
               }`}
             >
               {tab.label}
@@ -199,8 +184,8 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
         })}
       </div>
 
-      {/* Main Filter & Search Control Panel */}
-      <div className="p-3.5 sm:p-5 rounded-2xl bg-brand-surface border border-white/10 shadow-xl space-y-3 sm:space-y-4">
+      {/* Main Filter & Search Control Panel - Subtle, streamlined */}
+      <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-brand-surface/70 border border-white/5 space-y-3">
         {/* Top Row: Search + Mobile Filter Toggle + Sorting */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3">
           {/* Search Input */}
@@ -211,7 +196,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar perfume, notas o inspiración..."
-              className="w-full pl-10 pr-9 py-2 sm:py-2.5 rounded-xl bg-zinc-900/90 border border-white/10 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-gold transition"
+              className="w-full pl-10 pr-9 py-2 rounded-xl bg-zinc-900/90 border border-white/5 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-gold/50 transition"
             />
             {searchQuery && (
               <button
@@ -228,10 +213,10 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
             {/* Toggle Advanced Filters Button */}
             <button
               onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-              className={`flex-1 sm:flex-none justify-center px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 sm:gap-2 transition ${
+              className={`flex-1 sm:flex-none justify-center px-3.5 py-2 rounded-xl border text-xs font-medium flex items-center gap-1.5 transition ${
                 showAdvancedFilters || hasActiveFilters
-                  ? 'bg-brand-gold/15 text-brand-gold border-brand-gold/40'
-                  : 'bg-zinc-900/80 text-zinc-300 border-white/10 hover:border-white/20'
+                  ? 'bg-brand-gold/15 text-brand-gold border-brand-gold/30'
+                  : 'bg-zinc-900/80 text-zinc-300 border-white/5 hover:border-white/15'
               }`}
             >
               <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -248,9 +233,9 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="w-full px-2.5 sm:px-3 py-2 sm:py-2.5 rounded-xl bg-zinc-900/90 border border-white/10 text-xs text-zinc-200 focus:outline-none focus:border-brand-gold cursor-pointer"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-900/90 border border-white/5 text-xs text-zinc-300 focus:outline-none focus:border-brand-gold/50 cursor-pointer"
               >
-                <option value="featured">Destacados & Bestsellers</option>
+                <option value="featured">Destacados</option>
                 <option value="price-asc">Precio: Menor a Mayor</option>
                 <option value="price-desc">Precio: Mayor a Menor</option>
                 <option value="name">Nombre: A - Z</option>
@@ -259,70 +244,65 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           </div>
         </div>
 
-        {/* Filter Panel (Collapsible / Expandable with Brand, Gender & Family) */}
-        <div
-          className={`grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 pt-3 border-t border-white/5 transition-all duration-300 ${
-            showAdvancedFilters ? 'block' : 'hidden sm:grid'
-          }`}
-        >
-          {/* Brand Filter */}
-          <div>
-            <label className="text-[11px] font-medium text-zinc-400 block mb-1 flex items-center gap-1.5">
-              <Tag className="w-3 h-3 text-brand-gold" />
-              <span>Filtrar por Marca:</span>
-            </label>
-            <select
-              value={selectedBrand}
-              onChange={(e) => setSelectedBrand(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl bg-zinc-900/90 border border-white/10 text-xs text-zinc-200 focus:outline-none focus:border-brand-gold cursor-pointer"
-            >
-              <option value="all">Todas las marcas ({catalog.length})</option>
-              {availableBrands.map(([brand, count]) => (
-                <option key={brand} value={brand}>
-                  {brand} ({count})
-                </option>
-              ))}
-            </select>
-          </div>
+        {/* Filter Panel (Collapsible - Only shown when toggled) */}
+        {showAdvancedFilters && (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 pt-3 border-t border-white/5 animate-fadeIn">
+            {/* Brand Filter */}
+            <div>
+              <label className="text-[11px] font-medium text-zinc-400 block mb-1">
+                Marca
+              </label>
+              <select
+                value={selectedBrand}
+                onChange={(e) => setSelectedBrand(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl bg-zinc-900/90 border border-white/5 text-xs text-zinc-200 focus:outline-none focus:border-brand-gold/50 cursor-pointer"
+              >
+                <option value="all">Todas las marcas ({catalog.length})</option>
+                {availableBrands.map(([brand, count]) => (
+                  <option key={brand} value={brand}>
+                    {brand} ({count})
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          {/* Gender Filter */}
-          <div>
-            <label className="text-[11px] font-medium text-zinc-400 block mb-1 flex items-center gap-1.5">
-              <User className="w-3 h-3 text-brand-gold" />
-              <span>Género / Estilo:</span>
-            </label>
-            <select
-              value={selectedGender}
-              onChange={(e) => setSelectedGender(e.target.value as any)}
-              className="w-full px-3 py-2 rounded-xl bg-zinc-900/90 border border-white/10 text-xs text-zinc-200 focus:outline-none focus:border-brand-gold cursor-pointer"
-            >
-              <option value="all">Todos los géneros</option>
-              <option value="Unisex">✨ Unisex (Versátil)</option>
-              <option value="Masculino">🎩 Masculino</option>
-              <option value="Femenino">🌸 Femenino</option>
-            </select>
-          </div>
+            {/* Gender Filter */}
+            <div>
+              <label className="text-[11px] font-medium text-zinc-400 block mb-1">
+                Género
+              </label>
+              <select
+                value={selectedGender}
+                onChange={(e) => setSelectedGender(e.target.value as any)}
+                className="w-full px-3 py-2 rounded-xl bg-zinc-900/90 border border-white/5 text-xs text-zinc-200 focus:outline-none focus:border-brand-gold/50 cursor-pointer"
+              >
+                <option value="all">Todos los géneros</option>
+                <option value="Unisex">Unisex</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+              </select>
+            </div>
 
-          {/* Olfactory Family Filter */}
-          <div>
-            <label className="text-[11px] font-medium text-zinc-400 block mb-1 flex items-center gap-1.5">
-              <Sparkles className="w-3 h-3 text-brand-gold" />
-              <span>Familia Olfativa:</span>
-            </label>
-            <select
-              value={selectedFamily}
-              onChange={(e) => setSelectedFamily(e.target.value as any)}
-              className="w-full px-3 py-2 rounded-xl bg-zinc-900/90 border border-white/10 text-xs text-zinc-200 focus:outline-none focus:border-brand-gold cursor-pointer"
-            >
-              <option value="all">Todas las familias</option>
-              {FAMILIES.map((f) => (
-                <option key={f} value={f}>
-                  {f}
-                </option>
-              ))}
-            </select>
+            {/* Olfactory Family Filter */}
+            <div>
+              <label className="text-[11px] font-medium text-zinc-400 block mb-1">
+                Familia Olfativa
+              </label>
+              <select
+                value={selectedFamily}
+                onChange={(e) => setSelectedFamily(e.target.value as any)}
+                className="w-full px-3 py-2 rounded-xl bg-zinc-900/90 border border-white/5 text-xs text-zinc-200 focus:outline-none focus:border-brand-gold/50 cursor-pointer"
+              >
+                <option value="all">Todas las familias</option>
+                {FAMILIES.map((f) => (
+                  <option key={f} value={f}>
+                    {f}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Active Filter Chips & Counter */}

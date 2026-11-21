@@ -66,43 +66,30 @@ export const Navbar: React.FC = () => {
             <Logo showTagline={!isScrolled} />
           </a>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs tracking-[0.12em] uppercase font-medium text-zinc-300">
+          {/* Desktop Navigation Links - Clean, minimal luxury */}
+          <nav className="hidden lg:flex items-center gap-7 xl:gap-9 text-xs tracking-[0.14em] uppercase font-medium text-zinc-300">
             <a href="/" className="hover:text-brand-gold transition-colors">
               Inicio
             </a>
             <a href="/catalogo" className="hover:text-brand-gold transition-colors">
               Catálogo
             </a>
-            <a href="/catalogo?categoria=arabe" className="hover:text-brand-gold transition-colors flex items-center gap-1">
-              <span>Árabes</span>
-              <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 lowercase">top</span>
+            <a href="/catalogo?categoria=arabe" className="hover:text-brand-gold transition-colors">
+              Perfumes Árabes
             </a>
-            <span
-              className="text-zinc-500 cursor-not-allowed flex items-center gap-1.5 select-none"
-              title="Próximamente disponible"
-            >
-              <span>Diseñador</span>
-              <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-zinc-400 font-medium">
-                Próximamente
-              </span>
-            </span>
-            <a href="/decants" className="hover:text-brand-gold transition-colors flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
+            <a href="/decants" className="hover:text-brand-gold transition-colors">
               Decants
             </a>
-            <a href="/autenticidad" className="hover:text-emerald-400 transition-colors flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-              <span>¿Es Original?</span>
+            <a href="/autenticidad" className="hover:text-zinc-100 transition-colors">
+              Originalidad
             </a>
 
             {/* Quiz Trigger button in Navbar */}
             <button
               onClick={() => openQuiz()}
-              className="px-3 py-1 rounded-full bg-brand-gold/15 text-brand-gold border border-brand-gold/30 hover:bg-brand-gold hover:text-brand-dark transition-all flex items-center gap-1 text-[11px] font-semibold"
+              className="px-3.5 py-1 rounded-full text-zinc-300 hover:text-brand-gold hover:border-brand-gold/40 border border-white/10 transition-all text-[11px] font-medium"
             >
-              <Sparkles className="w-3 h-3" />
-              <span>Test Olfativo</span>
+              Test Olfativo
             </button>
           </nav>
 
@@ -259,46 +246,37 @@ export const Navbar: React.FC = () => {
                   onClick={() => setMobileMenuOpen(false)}
                   className="py-2.5 px-3 rounded-lg hover:bg-white/5 text-zinc-200 hover:text-brand-gold transition-colors"
                 >
-                  Catálogo Completo
+                  Catálogo
                 </a>
                 <a
                   href="/catalogo?categoria=arabe"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="py-2.5 px-3 rounded-lg hover:bg-white/5 text-zinc-200 hover:text-brand-gold transition-colors flex items-center justify-between"
+                  className="py-2.5 px-3 rounded-lg hover:bg-white/5 text-zinc-200 hover:text-brand-gold transition-colors"
                 >
-                  <span>Perfumes Árabes</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">🔥 Viral</span>
+                  Perfumes Árabes
                 </a>
-                <div className="py-2.5 px-3 rounded-lg text-zinc-500 flex items-center justify-between cursor-not-allowed select-none">
-                  <span>Perfumes de Diseñador</span>
-                  <span className="text-[10px] uppercase px-2 py-0.5 rounded bg-white/5 border border-white/10 text-zinc-400 font-medium">
-                    Próximamente
-                  </span>
-                </div>
                 <a
                   href="/decants"
                   onClick={() => setMobileMenuOpen(false)}
                   className="py-2.5 px-3 rounded-lg hover:bg-white/5 text-zinc-200 hover:text-brand-gold transition-colors"
                 >
-                  Decants & Muestras (5ml / 10ml)
+                  Decants & Muestras
                 </a>
                 <a
                   href="/autenticidad"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="py-2.5 px-3 rounded-lg bg-emerald-950/30 border border-emerald-500/20 text-emerald-300 hover:text-white transition-colors flex items-center gap-2"
+                  className="py-2.5 px-3 rounded-lg hover:bg-white/5 text-zinc-200 hover:text-brand-gold transition-colors"
                 >
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>¿Cómo saber si es original?</span>
+                  Garantía de Originalidad
                 </a>
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
                     openQuiz();
                   }}
-                  className="text-left py-2.5 px-3 rounded-lg bg-brand-gold/15 text-brand-gold border border-brand-gold/30 hover:bg-brand-gold hover:text-brand-dark transition-colors flex items-center gap-2"
+                  className="text-left py-2.5 px-3 rounded-lg text-brand-gold hover:bg-white/5 transition-colors"
                 >
-                  <Sparkles className="w-4 h-4" />
-                  <span>Test Olfativo Exprés</span>
+                  Test Olfativo
                 </button>
               </div>
             </div>

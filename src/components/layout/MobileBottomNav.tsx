@@ -37,10 +37,7 @@ export const MobileBottomNav: React.FC = () => {
           onClick={() => openQuiz()}
           className="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-zinc-400 hover:text-white active:text-brand-gold transition group"
         >
-          <div className="relative">
-            <Sparkles className="w-5 h-5 text-brand-gold group-hover:scale-110 transition-transform" />
-            <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-brand-gold animate-ping" />
-          </div>
+          <Sparkles className="w-5 h-5 text-brand-gold group-hover:scale-110 transition-transform" />
           <span className="text-[10px] font-medium tracking-wider uppercase text-brand-gold">Test</span>
         </button>
 
